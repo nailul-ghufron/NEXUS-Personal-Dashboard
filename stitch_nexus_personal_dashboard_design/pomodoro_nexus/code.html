@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>NEXUS // Focus</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@100;300;400;500;600;700;800;900&amp;family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "tertiary-fixed": "#ffddb5",
+                        "on-tertiary": "#462b00",
+                        "error": "#ffb4ab",
+                        "on-secondary-fixed-variant": "#003ea8",
+                        "on-tertiary-fixed-variant": "#643f00",
+                        "surface-tint": "#2fd9f4",
+                        "on-error": "#690005",
+                        "secondary": "#b4c5ff",
+                        "primary-fixed": "#a2eeff",
+                        "primary": "#8aebff",
+                        "outline": "#859397",
+                        "surface-container": "#1a2122",
+                        "on-background": "#dde4e5",
+                        "surface": "#0D1117",
+                        "on-secondary": "#002a78",
+                        "secondary-fixed-dim": "#b4c5ff",
+                        "on-tertiary-container": "#6e4600",
+                        "secondary-fixed": "#dbe1ff",
+                        "on-surface-variant": "#bbc9cd",
+                        "on-primary-fixed-variant": "#004e5a",
+                        "surface-variant": "#2f3638",
+                        "on-primary": "#00363e",
+                        "surface-glass": "rgba(255, 255, 255, 0.05)",
+                        "on-surface": "#dde4e5",
+                        "tertiary": "#ffd6a3",
+                        "surface-container-lowest": "#090f11",
+                        "tertiary-container": "#ffb13b",
+                        "inverse-on-surface": "#2b3233",
+                        "background": "#020408",
+                        "on-primary-fixed": "#001f25",
+                        "primary-fixed-dim": "#2fd9f4",
+                        "surface-bright": "#343a3c",
+                        "on-secondary-container": "#cdd7ff",
+                        "warning": "#F59E0B",
+                        "inverse-surface": "#dde4e5",
+                        "primary-container": "#22d3ee",
+                        "secondary-container": "#0053db",
+                        "outline-variant": "#3c494c",
+                        "surface-container-high": "#242b2d",
+                        "error-container": "#93000a",
+                        "text-primary": "#FFFFFF",
+                        "text-muted": "#475569",
+                        "on-secondary-fixed": "#00174b",
+                        "surface-container-low": "#161d1e",
+                        "tertiary-fixed-dim": "#ffb957",
+                        "glass-border": "rgba(255, 255, 255, 0.10)",
+                        "text-secondary": "#94A3B8",
+                        "surface-container-highest": "#2f3638",
+                        "on-tertiary-fixed": "#2a1800",
+                        "surface-dim": "#0e1416",
+                        "success": "#22C55E",
+                        "on-primary-container": "#005763",
+                        "danger": "#EF4444",
+                        "on-error-container": "#ffdad6",
+                        "inverse-primary": "#006877"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "gutter-card": "12px",
+                        "xl": "32px",
+                        "2xl": "48px",
+                        "lg": "24px",
+                        "xs": "4px",
+                        "margin-screen": "20px",
+                        "sm": "8px",
+                        "md": "16px"
+                    },
+                    "fontFamily": {
+                        "label-caps": ["Inter"],
+                        "h2": ["Inter"],
+                        "h3": ["Inter"],
+                        "h1": ["Inter"],
+                        "body-lg": ["Inter"],
+                        "body-md": ["Inter"]
+                    },
+                    "fontSize": {
+                        "label-caps": ["12px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "600"}],
+                        "h2": ["24px", {"lineHeight": "32px", "fontWeight": "600"}],
+                        "h3": ["20px", {"lineHeight": "28px", "fontWeight": "600"}],
+                        "h1": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                        "body-lg": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                        "body-md": ["14px", {"lineHeight": "20px", "fontWeight": "400"}]
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        body {
+            background-color: #020408;
+            position: relative;
+            overflow-x: hidden;
+            min-height: 100vh;
+        }
+
+        .glow-cyan {
+            position: fixed;
+            top: -10%;
+            right: -10%;
+            width: 50vw;
+            height: 50vw;
+            background: radial-gradient(circle, rgba(34, 211, 238, 0.15) 0%, rgba(34, 211, 238, 0) 70%);
+            z-index: -1;
+            pointer-events: none;
+        }
+
+        .glow-blue {
+            position: fixed;
+            bottom: -10%;
+            left: -10%;
+            width: 50vw;
+            height: 50vw;
+            background: radial-gradient(circle, rgba(0, 83, 219, 0.15) 0%, rgba(0, 83, 219, 0) 70%);
+            z-index: -1;
+            pointer-events: none;
+        }
+
+        .timer-glow {
+            text-shadow: 0 0 20px rgba(34, 211, 238, 0.5);
+        }
+
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="font-body-md text-on-background selection:bg-primary-container selection:text-on-primary-container">
+<div class="glow-cyan"></div>
+<div class="glow-blue"></div>
+<!-- TopAppBar Component -->
+<header class="fixed top-0 w-full z-50 bg-slate-950/50 backdrop-blur-xl border-b border-white/10 flex items-center justify-between px-6 h-16">
+<button class="text-white/70 hover:text-cyan-300 transition-colors active:scale-95">
+<span class="material-symbols-outlined" data-icon="menu">menu</span>
+</button>
+<h1 class="text-xl font-black text-cyan-400 tracking-[0.2em] font-inter uppercase">NEXUS</h1>
+<div class="w-8 h-8 rounded-full overflow-hidden border border-white/20 ring-2 ring-cyan-400/20 active:scale-95 transition-transform cursor-pointer">
+<img alt="User Profile" class="w-full h-full object-cover" data-alt="Close up portrait of a young professional man with a clean minimalist background and soft cinematic lighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCCBm8swdaTuwUe2JNXoaZ_mlq7dmVEhN05sLvuaAL03hbUC47N_gHIKVXIP-Z4XY0Kbx9bWyH4srjlS1y8diMCMgedG89nCYP7xFYEULlLc6zi8ATmkVTIyGyLhrIwJ0zH_nuiEGZxw-4Foed5Orx0JZWs1A91mN0PjWs4YOawGEp9e9vi8QvcGtOSz-IBp-NMvXmRGweviOdMjhtpO6xdn9oeD6KKJlYg6rUZmaBfIJHAf6JQS1-IxUyZ7THrp-Ks0P7m9pxs_w"/>
+</div>
+</header>
+<main class="pt-32 pb-40 px-margin-screen flex flex-col items-center justify-center min-h-screen">
+<!-- Main Timer Section -->
+<div class="relative w-full max-w-[320px] aspect-square flex items-center justify-center mb-12">
+<!-- Progress Ring -->
+<svg class="absolute inset-0 w-full h-full -rotate-90" viewbox="0 0 100 100">
+<circle class="text-white/5" cx="50" cy="50" fill="none" r="46" stroke="currentColor" stroke-width="2"></circle>
+<circle class="drop-shadow-[0_0_8px_rgba(34,211,238,0.4)]" cx="50" cy="50" fill="none" r="46" stroke="url(#cyan-gradient)" stroke-dasharray="289" stroke-dashoffset="70" stroke-linecap="round" stroke-width="3"></circle>
+<defs>
+<lineargradient id="cyan-gradient" x1="0%" x2="100%" y1="0%" y2="100%">
+<stop offset="0%" stop-color="#22d3ee"></stop>
+<stop offset="100%" stop-color="#0053db"></stop>
+</lineargradient>
+</defs>
+</svg>
+<!-- Countdown Timer -->
+<div class="text-center z-10">
+<p class="font-label-caps text-label-caps text-secondary mb-1 uppercase tracking-widest">Focus Session</p>
+<div class="font-h1 text-[64px] leading-tight font-black text-primary timer-glow tracking-tighter">
+                    25:00
+                </div>
+</div>
+</div>
+<!-- Presets Row -->
+<div class="flex flex-wrap justify-center gap-sm mb-12 max-w-sm">
+<button class="px-md py-xs rounded-full bg-white/5 border border-white/10 text-white/60 text-label-caps hover:bg-white/10 hover:text-white transition-all active:scale-95">5m</button>
+<button class="px-md py-xs rounded-full bg-white/5 border border-white/10 text-white/60 text-label-caps hover:bg-white/10 hover:text-white transition-all active:scale-95">10m</button>
+<button class="px-md py-xs rounded-full bg-white/5 border border-white/10 text-white/60 text-label-caps hover:bg-white/10 hover:text-white transition-all active:scale-95">15m</button>
+<button class="px-md py-xs rounded-full bg-cyan-500/20 border border-cyan-500/30 text-cyan-400 text-label-caps active:scale-95">25m</button>
+<button class="px-md py-xs rounded-full bg-white/5 border border-white/10 text-white/60 text-label-caps hover:bg-white/10 hover:text-white transition-all active:scale-95">50m</button>
+</div>
+<!-- Controls -->
+<div class="flex items-center gap-lg">
+<!-- Reset Button -->
+<button class="flex items-center justify-center w-14 h-14 rounded-full border border-white/10 bg-white/5 text-white/70 hover:bg-white/10 transition-all active:scale-90">
+<span class="material-symbols-outlined" data-icon="replay">replay</span>
+</button>
+<!-- Primary Play Button -->
+<button class="flex items-center justify-center w-20 h-20 rounded-full bg-gradient-to-br from-cyan-400 to-secondary-container text-on-primary-container shadow-[0_0_30px_rgba(34,211,238,0.4)] hover:shadow-[0_0_40px_rgba(34,211,238,0.6)] transition-all active:scale-95">
+<span class="material-symbols-outlined text-4xl" data-icon="play_arrow" data-weight="fill" style="font-variation-settings: 'FILL' 1;">play_arrow</span>
+</button>
+<!-- More Options -->
+<button class="flex items-center justify-center w-14 h-14 rounded-full border border-white/10 bg-white/5 text-white/70 hover:bg-white/10 transition-all active:scale-90">
+<span class="material-symbols-outlined" data-icon="more_vert">more_vert</span>
+</button>
+</div>
+<!-- Productivity Stats Card (Extra Contextual Component) -->
+<div class="mt-20 w-full max-w-md p-md rounded-xl bg-white/5 backdrop-blur-md border border-white/10">
+<div class="flex items-center justify-between mb-md">
+<h3 class="font-h3 text-h3 text-white/90">Daily Goal</h3>
+<span class="text-cyan-400 font-bold">3/8</span>
+</div>
+<div class="w-full h-1.5 bg-white/5 rounded-full overflow-hidden">
+<div class="h-full w-[37.5%] bg-cyan-400 shadow-[0_0_10px_rgba(34,211,238,0.5)]"></div>
+</div>
+<div class="mt-md flex justify-between text-white/40 text-xs">
+<span>75 mins focused</span>
+<span>5 hours remaining</span>
+</div>
+</div>
+</main>
+<!-- BottomNavBar Component -->
+<nav class="fixed bottom-6 left-1/2 -translate-x-1/2 w-[90%] max-w-lg rounded-full border border-white/10 bg-white/5 backdrop-blur-2xl shadow-[0_8px_32px_0_rgba(0,0,0,0.8)] flex justify-around items-center h-16 px-4 z-50">
+<a class="bg-cyan-500/20 text-cyan-400 shadow-[0_0_15px_rgba(34,211,238,0.3)] rounded-full p-3 active:scale-90 transition-all duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="timer" data-weight="fill" style="font-variation-settings: 'FILL' 1;">timer</span>
+</a>
+<a class="text-white/40 p-3 hover:text-white/80 transition-all active:scale-90 duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="calendar_today">calendar_today</span>
+</a>
+<a class="text-white/40 p-3 hover:text-white/80 transition-all active:scale-90 duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="description">description</span>
+</a>
+<a class="text-white/40 p-3 hover:text-white/80 transition-all active:scale-90 duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="settings">settings</span>
+</a>
+</nav>
+</body></html>

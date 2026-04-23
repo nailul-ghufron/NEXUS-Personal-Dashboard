@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Antigravity - Notes</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "danger": "#EF4444",
+                      "surface-container-highest": "#2f3638",
+                      "surface": "#0D1117",
+                      "on-primary-fixed": "#001f25",
+                      "background": "#030712",
+                      "on-primary": "#00363e",
+                      "text-primary": "#FFFFFF",
+                      "error": "#ffb4ab",
+                      "text-secondary": "#94A3B8",
+                      "on-tertiary-container": "#6e4600",
+                      "surface-glass": "rgba(255, 255, 255, 0.05)",
+                      "glass-border": "rgba(255, 255, 255, 0.10)",
+                      "primary-fixed": "#a2eeff",
+                      "inverse-primary": "#006877",
+                      "inverse-surface": "#dde4e5",
+                      "outline-variant": "#3c494c",
+                      "tertiary-fixed-dim": "#ffb957",
+                      "tertiary": "#ffd6a3",
+                      "surface-container-high": "#242b2d",
+                      "inverse-on-surface": "#2b3233",
+                      "warning": "#F59E0B",
+                      "tertiary-fixed": "#ffddb5",
+                      "surface-variant": "#2f3638",
+                      "secondary-container": "#0053db",
+                      "on-tertiary": "#462b00",
+                      "on-error-container": "#ffdad6",
+                      "surface-tint": "#2fd9f4",
+                      "surface-container-lowest": "#090f11",
+                      "surface-container-low": "#161d1e",
+                      "on-tertiary-fixed-variant": "#643f00",
+                      "primary": "#8aebff",
+                      "surface-bright": "#343a3c",
+                      "on-surface-variant": "#bbc9cd",
+                      "secondary-fixed-dim": "#b4c5ff",
+                      "on-primary-container": "#005763",
+                      "surface-container": "#1a2122",
+                      "success": "#22C55E",
+                      "on-surface": "#dde4e5",
+                      "error-container": "#93000a",
+                      "tertiary-container": "#ffb13b",
+                      "primary-container": "#22d3ee",
+                      "on-error": "#690005",
+                      "primary-fixed-dim": "#2fd9f4",
+                      "on-secondary-fixed-variant": "#003ea8",
+                      "on-secondary": "#002a78",
+                      "on-primary-fixed-variant": "#004e5a",
+                      "on-background": "#dde4e5",
+                      "on-tertiary-fixed": "#2a1800",
+                      "on-secondary-fixed": "#00174b",
+                      "secondary": "#b4c5ff",
+                      "secondary-fixed": "#dbe1ff",
+                      "on-secondary-container": "#cdd7ff",
+                      "text-muted": "#475569",
+                      "surface-dim": "#0e1416",
+                      "outline": "#859397"
+              },
+              "borderRadius": {
+                      "DEFAULT": "0.25rem",
+                      "lg": "0.5rem",
+                      "xl": "0.75rem",
+                      "full": "9999px"
+              },
+              "spacing": {
+                      "gutter-card": "12px",
+                      "2xl": "48px",
+                      "xs": "4px",
+                      "lg": "24px",
+                      "md": "16px",
+                      "margin-screen": "20px",
+                      "xl": "32px",
+                      "sm": "8px"
+              },
+              "fontFamily": {
+                      "body-md": [
+                              "Inter"
+                      ],
+                      "body-lg": [
+                              "Inter"
+                      ],
+                      "label-caps": [
+                              "Inter"
+                      ],
+                      "h2": [
+                              "Inter"
+                      ],
+                      "h3": [
+                              "Inter"
+                      ],
+                      "h1": [
+                              "Inter"
+                      ]
+              },
+              "fontSize": {
+                      "body-md": [
+                              "14px",
+                              {
+                                      "lineHeight": "20px",
+                                      "fontWeight": "400"
+                              }
+                      ],
+                      "body-lg": [
+                              "16px",
+                              {
+                                      "lineHeight": "24px",
+                                      "fontWeight": "400"
+                              }
+                      ],
+                      "label-caps": [
+                              "12px",
+                              {
+                                      "lineHeight": "16px",
+                                      "letterSpacing": "0.05em",
+                                      "fontWeight": "600"
+                              }
+                      ],
+                      "h2": [
+                              "24px",
+                              {
+                                      "lineHeight": "32px",
+                                      "fontWeight": "600"
+                              }
+                      ],
+                      "h3": [
+                              "20px",
+                              {
+                                      "lineHeight": "28px",
+                                      "fontWeight": "600"
+                              }
+                      ],
+                      "h1": [
+                              "32px",
+                              {
+                                      "lineHeight": "40px",
+                                      "letterSpacing": "-0.02em",
+                                      "fontWeight": "700"
+                              }
+                      ]
+              }
+            }
+          }
+        }
+    </script>
+<style>
+        .glass-card {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.10);
+        }
+        
+        /* Note Tints */
+        .tint-ocean { background: rgba(0, 83, 219, 0.1); border-color: rgba(0, 83, 219, 0.2); }
+        .tint-aurora { background: rgba(34, 211, 238, 0.08); border-color: rgba(34, 211, 238, 0.15); }
+        .tint-dusk { background: rgba(147, 0, 10, 0.1); border-color: rgba(147, 0, 10, 0.2); }
+        .tint-forest { background: rgba(34, 197, 94, 0.08); border-color: rgba(34, 197, 94, 0.15); }
+        
+        .masonry-grid {
+            column-count: 2;
+            column-gap: 12px;
+        }
+        .masonry-item {
+            break-inside: avoid;
+            margin-bottom: 12px;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+</head>
+<body class="bg-background text-text-primary min-h-screen relative overflow-x-hidden font-body-md">
+<!-- Ambient Mesh Gradient Background -->
+<div class="fixed inset-0 z-[-1] opacity-30 pointer-events-none">
+<div class="absolute top-[-10%] left-[-10%] w-[50%] h-[50%] rounded-full bg-primary-container blur-[120px] opacity-40"></div>
+<div class="absolute bottom-[-20%] right-[-10%] w-[60%] h-[60%] rounded-full bg-secondary-container blur-[150px] opacity-30"></div>
+</div>
+<!-- TopAppBar -->
+<header class="bg-transparent backdrop-blur-md docked full-width top-0 border-b border-white/10 flat no shadows flex justify-between items-center px-5 py-4 w-full sticky z-40">
+<div class="flex items-center">
+<div class="w-8 h-8 rounded-full overflow-hidden mr-3">
+<img alt="Student Profile Avatar" class="w-full h-full object-cover" data-alt="Portrait of a young woman with natural makeup looking directly at camera, soft lighting, neutral background" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCvlfPDQR2FebyF71c4Td5ekeVHKQo7h2ixSKXmx5wohiSPcl2az_lFdK-DkSB3glLUmsZK3czOKzpcsIzNp0beam-jU4RUdjFpHIcWJ2ygWtv_bztTgIT5vYnRzHFQSyL1fQoyLRC2Np9kVzeBjrRrTtgZ-g4jjmWw-7ZYgMqxTMDLvEJ-HK6DZ-OQJIHDHaLnabxq5vQmBZ-5AYYk_Bfb-r19KLTOKWbgxnC9wB3v-v9iFejd6kSOp5snfUNTzSfkvm9X4-50XA"/>
+</div>
+<span class="font-inter tracking-tight text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-cyan-300">NEXUS</span>
+</div>
+<div class="flex items-center space-x-4">
+<button class="text-white/60 hover:bg-white/5 transition-colors p-2 rounded-full flex items-center justify-center">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">search</span>
+</button>
+<button class="text-cyan-400 hover:bg-white/5 transition-colors p-2 rounded-full flex items-center justify-center">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">settings</span>
+</button>
+</div>
+</header>
+<!-- Main Content Canvas -->
+<main class="px-margin-screen pt-lg pb-[100px]">
+<!-- Section Header -->
+<div class="flex justify-between items-center mb-md">
+<h1 class="font-h1 text-h1 text-text-primary">NOTES</h1>
+<button class="w-10 h-10 rounded-full bg-gradient-to-r from-blue-400 to-cyan-300 flex items-center justify-center text-on-primary-fixed shadow-[0_0_15px_rgba(34,211,238,0.4)]">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">add</span>
+</button>
+</div>
+<!-- Search / Filter (Glass Input) -->
+<div class="relative mb-lg">
+<span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-text-secondary">search</span>
+<input class="w-full bg-surface-glass border-glass-border rounded-lg py-3 pl-12 pr-4 text-text-primary font-body-md focus:border-cyan-400 focus:ring-1 focus:ring-cyan-400 transition-colors placeholder:text-text-secondary outline-none" placeholder="Search notes..." type="text"/>
+</div>
+<!-- Notes Masonry Grid -->
+<div class="masonry-grid">
+<!-- Note Card 1 (Aurora Tint) -->
+<div class="masonry-item glass-card rounded-xl p-md tint-aurora">
+<h3 class="font-body-lg text-body-lg text-text-primary mb-2">Physics Midterm Formulas</h3>
+<p class="font-body-md text-body-md text-text-secondary mb-3 line-clamp-4">
+                    Kinematics: v = u + at, s = ut + 1/2at^2.
+                    Remember to check units before plugging into equations.
+                    Forces: F = ma. Torque = r x F.
+                </p>
+<div class="text-xs text-text-muted font-body-md">2 hours ago</div>
+</div>
+<!-- Note Card 2 (Ocean Tint) -->
+<div class="masonry-item glass-card rounded-xl p-md tint-ocean">
+<h3 class="font-body-lg text-body-lg text-text-primary mb-2">Lit Essay Ideas</h3>
+<p class="font-body-md text-body-md text-text-secondary mb-3">
+                    Theme of isolation in modern dystopia.
+                    Compare 1984 with Brave New World.
+                    Focus on the role of technology as a silencer vs an amplifier.
+                </p>
+<div class="text-xs text-text-muted font-body-md">Yesterday</div>
+</div>
+<!-- Note Card 3 (Neutral Glass) -->
+<div class="masonry-item glass-card rounded-xl p-md">
+<h3 class="font-body-lg text-body-lg text-text-primary mb-2">To-Do: Weekend</h3>
+<ul class="font-body-md text-body-md text-text-secondary mb-3 space-y-1">
+<li class="flex items-center"><span class="material-symbols-outlined text-[14px] mr-1 text-cyan-400">check_box</span> Groceries</li>
+<li class="flex items-center"><span class="material-symbols-outlined text-[14px] mr-1 text-cyan-400">check_box</span> Laundry</li>
+<li class="flex items-center"><span class="material-symbols-outlined text-[14px] mr-1 text-text-muted">check_box_outline_blank</span> Finish Math P-Set</li>
+</ul>
+<div class="text-xs text-text-muted font-body-md">Oct 12</div>
+</div>
+<!-- Note Card 4 (Forest Tint) -->
+<div class="masonry-item glass-card rounded-xl p-md tint-forest">
+<h3 class="font-body-lg text-body-lg text-text-primary mb-2">Biology Lab Notes</h3>
+<p class="font-body-md text-body-md text-text-secondary mb-3">
+                    Mitochondria observations. The dye took 5 mins to settle.
+                    Sample B showed higher activity under heat stress.
+                </p>
+<div class="text-xs text-text-muted font-body-md">Oct 10</div>
+</div>
+<!-- Note Card 5 (Dusk Tint) -->
+<div class="masonry-item glass-card rounded-xl p-md tint-dusk">
+<h3 class="font-body-lg text-body-lg text-text-primary mb-2">Questions for Prof. Smith</h3>
+<p class="font-body-md text-body-md text-text-secondary mb-3">
+                    Clarify the grading rubric for the final project. 
+                    Can we use external libraries for the coding assignment?
+                </p>
+<div class="text-xs text-text-muted font-body-md">Oct 08</div>
+</div>
+</div>
+</main>
+<!-- BottomNavBar -->
+<nav class="fixed bottom-0 left-0 right-0 z-50 flex justify-around items-center h-16 px-6 bg-white/5 backdrop-blur-xl rounded-full mx-auto mb-6 w-[90%] max-w-md border border-white/10 shadow-[0_0_20px_rgba(34,211,238,0.15)] md:hidden">
+<a class="flex flex-col items-center justify-center text-white/40 hover:text-white transition-all w-12 h-12" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">today</span>
+</a>
+<a class="flex flex-col items-center justify-center text-white/40 hover:text-white transition-all w-12 h-12" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">calendar_month</span>
+</a>
+<a class="flex flex-col items-center justify-center text-white/40 hover:text-white transition-all w-12 h-12" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">checklist</span>
+</a>
+<a class="flex flex-col items-center justify-center text-cyan-400 drop-shadow-[0_0_8px_rgba(34,211,238,0.8)] scale-110 duration-300 ease-out w-12 h-12" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">description</span>
+</a>
+</nav>
+</body></html>
