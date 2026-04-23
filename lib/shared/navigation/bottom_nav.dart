@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:lucide_icons_flutter/lucide_icons_flutter.dart';
 import '../../core/constants/colors.dart';
 import '../../core/widgets/glass_card.dart';
 
@@ -28,11 +29,11 @@ class MainShell extends StatelessWidget {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
-                    _buildNavItem(context, Icons.home_rounded, '/today'),
-                    _buildNavItem(context, Icons.calendar_today_rounded, '/schedule'),
+                    _buildNavItem(context, LucideIcons.house, '/today'),
+                    _buildNavItem(context, LucideIcons.calendar, '/schedule'),
                     _buildFab(context),
-                    _buildNavItem(context, Icons.checklist_rounded, '/checklist'),
-                    _buildNavItem(context, Icons.sticky_note_2_rounded, '/notes'),
+                    _buildNavItem(context, LucideIcons.checkSquare, '/checklist'),
+                    _buildNavItem(context, LucideIcons.stickyNote, '/notes'),
                   ],
                 ),
               ),
@@ -59,13 +60,13 @@ class MainShell extends StatelessWidget {
         gradient: NexusColors.accentGrad,
         boxShadow: [
           BoxShadow(
-            color: NexusColors.accentCyan.withOpacity(0.5),
+            color: NexusColors.accentCyan.withValues(alpha: 0.5),
             blurRadius: 16,
           ),
         ],
       ),
       child: IconButton(
-        icon: const Icon(Icons.add, color: Colors.white),
+        icon: const Icon(LucideIcons.plus, color: Colors.white),
         onPressed: () {
           // Implement FAB expand menu
         },

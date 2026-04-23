@@ -27,7 +27,7 @@ class ProgressRing extends StatelessWidget {
               CircularProgressIndicator(
                 value: 1.0,
                 strokeWidth: 6,
-                color: Colors.white.withOpacity(0.05),
+                color: Colors.white.withValues(alpha: 0.05),
               ),
               CircularProgressIndicator(
                 value: percentage,
@@ -41,7 +41,7 @@ class ProgressRing extends StatelessWidget {
                   shape: BoxShape.circle,
                   boxShadow: [
                     BoxShadow(
-                      color: NexusColors.accentCyan.withOpacity(0.2),
+                      color: NexusColors.accentCyan.withValues(alpha: 0.2),
                       blurRadius: 20,
                       spreadRadius: -10,
                     ),

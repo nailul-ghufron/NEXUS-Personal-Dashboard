@@ -1,14 +1,26 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../../../core/constants/colors.dart';
 import '../../../core/widgets/glass_input.dart';
+import 'providers/notes_provider.dart';
 import 'widgets/note_card.dart';
+import 'widgets/add_note_dialog.dart';
 
-class NotesScreen extends StatelessWidget {
+class NotesScreen extends ConsumerStatefulWidget {
   const NotesScreen({super.key});
 
   @override
+  ConsumerState<NotesScreen> createState() => _NotesScreenState();
+}
+
+class _NotesScreenState extends ConsumerState<NotesScreen> {
+  String _searchQuery = '';
+
+  @override
   Widget build(BuildContext context) {
+    final notesAsync = ref.watch(notesProvider);
+
     return Scaffold(
       backgroundColor: NexusColors.background,
       body: SafeArea(
@@ -23,9 +35,9 @@ class NotesScreen extends StatelessWidget {
                 height: 300,
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
-                  color: NexusColors.accentCyan.withOpacity(0.1),
+                  color: NexusColors.accentCyan.withValues(alpha: 0.1),
                   boxShadow: [
-                    BoxShadow(color: NexusColors.accentCyan.withOpacity(0.1), blurRadius: 150),
+                    BoxShadow(color: NexusColors.accentCyan.withValues(alpha: 0.1), blurRadius: 150),
                   ],
                 ),
               ),
@@ -38,9 +50,9 @@ class NotesScreen extends StatelessWidget {
                 height: 300,
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
-                  color: NexusColors.accentBlue.withOpacity(0.1),
+                  color: NexusColors.accentBlue.withValues(alpha: 0.1),
                   boxShadow: [
-                    BoxShadow(color: NexusColors.accentBlue.withOpacity(0.1), blurRadius: 150),
+                    BoxShadow(color: NexusColors.accentBlue.withValues(alpha: 0.1), blurRadius: 150),
                   ],
                 ),
               ),
@@ -50,15 +62,27 @@ class NotesScreen extends StatelessWidget {
               children: [
                 _buildHeader(),
                 Expanded(
-                  child: SingleChildScrollView(
-                    padding: const EdgeInsets.fromLTRB(20, 16, 20, 100),
-                    child: Column(
-                      children: [
-                        _buildSearchInput(),
-                        const SizedBox(height: 24),
-                        _buildMasonryGrid(),
-                      ],
-                    ),
+                  child: notesAsync.when(
+                    data: (notes) {
+                      final filteredNotes = notes.where((n) {
+                        final query = _searchQuery.toLowerCase();
+                        return n.title.toLowerCase().contains(query) || 
+                               (n.content?.toLowerCase().contains(query) ?? false);
+                      }).toList();
+
+                      return SingleChildScrollView(
+                        padding: const EdgeInsets.fromLTRB(20, 16, 20, 100),
+                        child: Column(
+                          children: [
+                            _buildSearchInput(),
+                            const SizedBox(height: 24),
+                            _buildMasonryGrid(filteredNotes),
+                          ],
+                        ),
+                      );
+                    },
+                    loading: () => const Center(child: CircularProgressIndicator(color: NexusColors.accentCyan)),
+                    error: (e, _) => Center(child: Text('Error: $e', style: const TextStyle(color: Colors.white))),
                   ),
                 ),
               ],
@@ -89,12 +113,17 @@ class NotesScreen extends StatelessWidget {
               shape: BoxShape.circle,
               gradient: NexusColors.accentGrad,
               boxShadow: [
-                BoxShadow(color: NexusColors.accentCyan.withOpacity(0.4), blurRadius: 12),
+                BoxShadow(color: NexusColors.accentCyan.withValues(alpha: 0.4), blurRadius: 12),
               ],
             ),
             child: IconButton(
               icon: const Icon(Icons.add, color: Colors.white),
-              onPressed: () {},
+              onPressed: () {
+                showDialog(
+                  context: context,
+                  builder: (context) => const AddNoteDialog(),
+                );
+              },
             ),
           ),
         ],
@@ -106,56 +135,48 @@ class NotesScreen extends StatelessWidget {
     return GlassInput(
       hintText: 'Search notes...',
       prefixIcon: const Icon(Icons.search, color: NexusColors.textSecondary),
+      onChanged: (value) {
+        setState(() {
+          _searchQuery = value;
+        });
+      },
     );
   }
 
-  Widget _buildMasonryGrid() {
-    // Simple 2-column masonry simulation using Rows and Columns
+  Widget _buildMasonryGrid(List notes) {
+    if (notes.isEmpty) {
+      return Center(
+        child: Padding(
+          padding: const EdgeInsets.only(top: 40),
+          child: Text(
+            'No notes found.',
+            style: GoogleFonts.inter(color: NexusColors.textSecondary),
+          ),
+        ),
+      );
+    }
+
+    final leftCol = <Widget>[];
+    final rightCol = <Widget>[];
+
+    for (var i = 0; i < notes.length; i++) {
+      final card = NoteCard(note: notes[i]);
+      if (i % 2 == 0) {
+        leftCol.add(card);
+      } else {
+        rightCol.add(card);
+      }
+    }
+
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Expanded(
-          child: Column(
-            children: const [
-              NoteCard(
-                title: 'Physics Midterm Formulas',
-                content: 'Kinematics: v = u + at, s = ut + 1/2at^2.\nRemember to check units before plugging into equations.\nForces: F = ma. Torque = r x F.',
-                date: '2 hours ago',
-                tint: NoteTint.aurora,
-              ),
-              NoteCard(
-                title: 'To-Do: Weekend',
-                content: '✓ Groceries\n✓ Laundry\n☐ Finish Math P-Set',
-                date: 'Oct 12',
-                tint: NoteTint.neutral,
-              ),
-              NoteCard(
-                title: 'Questions for Prof. Smith',
-                content: 'Clarify the grading rubric for the final project.\nCan we use external libraries for the coding assignment?',
-                date: 'Oct 08',
-                tint: NoteTint.dusk,
-              ),
-            ],
-          ),
+          child: Column(children: leftCol),
         ),
         const SizedBox(width: 12),
         Expanded(
-          child: Column(
-            children: const [
-              NoteCard(
-                title: 'Lit Essay Ideas',
-                content: 'Theme of isolation in modern dystopia.\nCompare 1984 with Brave New World.\nFocus on the role of technology as a silencer vs an amplifier.',
-                date: 'Yesterday',
-                tint: NoteTint.ocean,
-              ),
-              NoteCard(
-                title: 'Biology Lab Notes',
-                content: 'Mitochondria observations. The dye took 5 mins to settle.\nSample B showed higher activity under heat stress.',
-                date: 'Oct 10',
-                tint: NoteTint.forest,
-              ),
-            ],
-          ),
+          child: Column(children: rightCol),
         ),
       ],
     );

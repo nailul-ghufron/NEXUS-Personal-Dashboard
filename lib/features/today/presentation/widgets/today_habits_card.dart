@@ -19,7 +19,7 @@ class TodayHabitsCard extends StatelessWidget {
               fontSize: 12,
               fontWeight: FontWeight.w600,
               letterSpacing: 2.4,
-              color: NexusColors.textSecondary.withOpacity(0.7),
+              color: NexusColors.textSecondary.withValues(alpha: 0.7),
             ),
           ),
         ),
@@ -37,7 +37,7 @@ class TodayHabitsCard extends StatelessWidget {
                         CircularProgressIndicator(
                           value: 0.5,
                           strokeWidth: 4,
-                          backgroundColor: Colors.white.withOpacity(0.05),
+                          backgroundColor: Colors.white.withValues(alpha: 0.05),
                           color: NexusColors.accentCyan,
                         ),
                         Center(
@@ -95,8 +95,8 @@ class TodayHabitsCard extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
-        color: Colors.white.withOpacity(0.03),
-        border: Border.all(color: Colors.white.withOpacity(0.05)),
+        color: Colors.white.withValues(alpha: 0.03),
+        border: Border.all(color: Colors.white.withValues(alpha: 0.05)),
         borderRadius: BorderRadius.circular(8),
       ),
       child: Row(
@@ -105,9 +105,9 @@ class TodayHabitsCard extends StatelessWidget {
             width: 24,
             height: 24,
             decoration: BoxDecoration(
-              color: isDone ? NexusColors.accentCyan.withOpacity(0.2) : Colors.transparent,
+              color: isDone ? NexusColors.accentCyan.withValues(alpha: 0.2) : Colors.transparent,
               border: Border.all(
-                color: isDone ? NexusColors.accentCyan : Colors.white.withOpacity(0.2),
+                color: isDone ? NexusColors.accentCyan : Colors.white.withValues(alpha: 0.2),
               ),
               borderRadius: BorderRadius.circular(4),
             ),
@@ -122,7 +122,7 @@ class TodayHabitsCard extends StatelessWidget {
               fontSize: 16,
               color: isDone ? NexusColors.textSecondary : NexusColors.textPrimary,
               decoration: isDone ? TextDecoration.lineThrough : null,
-              decorationColor: Colors.white.withOpacity(0.2),
+              decorationColor: Colors.white.withValues(alpha: 0.2),
             ),
           ),
         ],

@@ -11,9 +11,9 @@
 | Field | Value |
 |---|---|
 | **Nama Proyek** | Nexus — Personal Dashboard |
-| **Edisi** | Antigravity (Flutter + Firebase) |
+| **Edisi** | Antigravity (Flutter + Supabase) |
 | **Platform Target** | Android & iOS (Mobile-First) |
-| **Stack Utama** | Flutter 3.x + Firebase |
+| **Stack Utama** | Flutter 3.x + Supabase |
 | **Versi PRD** | 1.0.0 |
 | **Tanggal** | April 2026 |
 | **Author** | Muhammad Nailul Ghufron Majid |
@@ -25,7 +25,7 @@
 
 ## 🎯 Visi Produk
 
-**Nexus** adalah aplikasi mobile personal dashboard berbasis **Flutter** dengan backend **Firebase**, dirancang khusus untuk mahasiswa. Aplikasi ini fokus pada tiga pilar utama:
+**Nexus** adalah aplikasi mobile personal dashboard berbasis **Flutter** dengan backend **Supabase**, dirancang khusus untuk mahasiswa. Aplikasi ini fokus pada tiga pilar utama:
 
 1. **Hari Ini (Today)** — Ringkasan fokus harian yang actionable
 2. **Jadwal** — Manajemen jadwal kuliah & ma'had
@@ -45,7 +45,7 @@
 ```
 lib/
 ├── main.dart                        # Entry point
-├── firebase_options.dart            # FlutterFire config (auto-generated)
+├── .env                             # Environment variables (Supabase Keys)
 ├── app/
 │   ├── app.dart                     # MaterialApp / root widget
 │   └── router.dart                  # GoRouter route definitions
@@ -169,12 +169,8 @@ dependencies:
   flutter:
     sdk: flutter
 
-  # Firebase
-  firebase_core: ^3.x
-  firebase_auth: ^5.x
-  cloud_firestore: ^5.x
-  firebase_storage: ^12.x
-  firebase_messaging: ^15.x
+  # Supabase
+  supabase_flutter: ^2.x
 
   # State & Routing
   flutter_riverpod: ^2.5
@@ -204,9 +200,9 @@ dev_dependencies:
 
 ---
 
-## 🔐 Firebase Schema (Firestore)
+## 🔐 Supabase Schema (PostgreSQL)
 
-> Setiap collection dilindungi dengan **Firebase Security Rules** — user hanya dapat mengakses dokumen miliknya sendiri (`request.auth.uid == resource.data.userId`).
+> Setiap table dilindungi dengan **Row Level Security (RLS)** — user hanya dapat mengakses baris miliknya sendiri (`auth.uid() = user_id`).
 
 ### Collection: `users`
 ```
@@ -313,13 +309,13 @@ service cloud.firestore {
 **Behavior:**
 - Animasi mesh gradient background (dark, multi-color subtle)
 - Input email & password dengan style glassmorphism
-- Tombol **Login** → Firebase Auth `signInWithEmailAndPassword`
-- Tombol **Google** → `GoogleSignIn` + Firebase Auth
+- Tombol **Login** → Supabase Auth `signInWithPassword`
+- Tombol **Google** → `signInWithOAuth(Provider.google)`
 - Error handling: tampilkan snackbar bila credential salah
 - Redirect ke `/today` setelah login berhasil
 - `GoRouter` redirect guard: jika sudah login → skip ke `/today`
 
-**State:** `AuthProvider` (Riverpod) — watch `FirebaseAuth.instance.authStateChanges()`
+**State:** `AuthProvider` (Riverpod) — watch `supabase.auth.onAuthStateChange`
 
 ---
 
@@ -746,7 +742,7 @@ Tidak ada `.env` file — semua config Firebase ada di `firebase_options.dart` (
 ## 📜 Changelog
 
 ### v1.0.0 — April 2026 (Antigravity Edition)
-- 🔥 **Migrasi stack**: Next.js + Supabase → Flutter + Firebase
+- 🔥 **Migrasi stack**: Firebase → Supabase
 - 🗑️ **Dipangkas**: `/tasks`, `/analytics`, `/finance`
 - ✅ **Dipertahankan**: Today, Schedule, Checklist, Notes, Notifications, Pomodoro
 - 🎯 **Fokus**: Mobile-native experience dengan Flutter

@@ -1,25 +1,60 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:lucide_icons_flutter/lucide_icons_flutter.dart';
 import '../../../core/constants/colors.dart';
 import '../../../core/widgets/glass_card.dart';
 import '../../../core/widgets/glass_button.dart';
 import '../../../core/widgets/glass_input.dart';
+import 'auth_providers.dart';
 import 'widgets/mesh_gradient_bg.dart';
 
-class LoginScreen extends StatefulWidget {
+class LoginScreen extends ConsumerStatefulWidget {
   const LoginScreen({super.key});
 
   @override
-  State<LoginScreen> createState() => _LoginScreenState();
+  ConsumerState<LoginScreen> createState() => _LoginScreenState();
 }
 
-class _LoginScreenState extends State<LoginScreen> {
+class _LoginScreenState extends ConsumerState<LoginScreen> {
   bool _isPasswordVisible = false;
+  bool _isLoading = false;
+  final _emailController = TextEditingController();
+  final _passwordController = TextEditingController();
 
-  void _login() {
-    // Navigate to today
-    context.go('/today');
+  @override
+  void dispose() {
+    _emailController.dispose();
+    _passwordController.dispose();
+    super.dispose();
+  }
+
+  Future<void> _login() async {
+    if (_emailController.text.isEmpty || _passwordController.text.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Please enter email and password')),
+      );
+      return;
+    }
+
+    setState(() => _isLoading = true);
+    
+    try {
+      await ref.read(authRepositoryProvider).signIn(
+        email: _emailController.text,
+        password: _passwordController.text,
+      );
+      if (mounted) context.go('/today');
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Error: ${e.toString()}')),
+        );
+      }
+    } finally {
+      if (mounted) setState(() => _isLoading = false);
+    }
   }
 
   @override
@@ -46,6 +81,11 @@ class _LoginScreenState extends State<LoginScreen> {
               ),
             ),
           ),
+          if (_isLoading)
+            Container(
+              color: Colors.black.withValues(alpha: 0.5),
+              child: const Center(child: CircularProgressIndicator(color: NexusColors.accentCyan)),
+            ),
         ],
       ),
     );
@@ -63,12 +103,12 @@ class _LoginScreenState extends State<LoginScreen> {
             borderRadius: BorderRadius.circular(12),
             boxShadow: [
               BoxShadow(
-                color: NexusColors.accentCyan.withOpacity(0.15),
+                color: NexusColors.accentCyan.withValues(alpha: 0.15),
                 blurRadius: 20,
               )
             ],
           ),
-          child: const Icon(Icons.my_location, color: NexusColors.accentCyan),
+          child: const Icon(LucideIcons.scan, color: NexusColors.accentCyan),
         ),
         const SizedBox(height: 16),
         ShaderMask(
@@ -104,8 +144,9 @@ class _LoginScreenState extends State<LoginScreen> {
           _buildInputLabel('Email Address'),
           const SizedBox(height: 4),
           GlassInput(
+            controller: _emailController,
             hintText: 'student@university.edu',
-            prefixIcon: const Icon(Icons.mail_outline, color: NexusColors.textMuted),
+            prefixIcon: const Icon(LucideIcons.mail, color: NexusColors.textMuted),
             keyboardType: TextInputType.emailAddress,
           ),
           const SizedBox(height: 16),
@@ -124,12 +165,13 @@ class _LoginScreenState extends State<LoginScreen> {
           ),
           const SizedBox(height: 4),
           GlassInput(
+            controller: _passwordController,
             hintText: '••••••••',
             obscureText: !_isPasswordVisible,
-            prefixIcon: const Icon(Icons.lock_outline, color: NexusColors.textMuted),
+            prefixIcon: const Icon(LucideIcons.lock, color: NexusColors.textMuted),
             suffixIcon: IconButton(
               icon: Icon(
-                _isPasswordVisible ? Icons.visibility_outlined : Icons.visibility_off_outlined,
+                _isPasswordVisible ? LucideIcons.eye : LucideIcons.eyeOff,
                 color: NexusColors.textMuted,
               ),
               onPressed: () {
@@ -148,7 +190,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 fontSize: 12,
                 fontWeight: FontWeight.w600,
                 letterSpacing: 0.6,
-                color: Colors.black, // on-primary-fixed
+                color: Colors.black,
               ),
             ),
           ),
@@ -178,8 +220,7 @@ class _LoginScreenState extends State<LoginScreen> {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                // Google Logo Icon (Mock)
-                const Icon(Icons.g_mobiledata, size: 32, color: Colors.white),
+                const Icon(LucideIcons.chrome, size: 24, color: Colors.white),
                 const SizedBox(width: 8),
                 Text(
                   'Continue with Google',
@@ -233,3 +274,4 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 }
+

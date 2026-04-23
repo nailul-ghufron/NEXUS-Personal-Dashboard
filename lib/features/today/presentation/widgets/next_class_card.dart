@@ -19,7 +19,7 @@ class NextClassCard extends StatelessWidget {
               fontSize: 12,
               fontWeight: FontWeight.w600,
               letterSpacing: 2.4,
-              color: NexusColors.textSecondary.withOpacity(0.7),
+              color: NexusColors.textSecondary.withValues(alpha: 0.7),
             ),
           ),
         ),
@@ -36,7 +36,7 @@ class NextClassCard extends StatelessWidget {
                     color: NexusColors.accentCyan,
                     boxShadow: [
                       BoxShadow(
-                        color: NexusColors.accentCyan.withOpacity(0.5),
+                        color: NexusColors.accentCyan.withValues(alpha: 0.5),
                         blurRadius: 8,
                       )
                     ],
@@ -94,8 +94,8 @@ class NextClassCard extends StatelessWidget {
                             Container(
                               padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
                               decoration: BoxDecoration(
-                                color: NexusColors.accentCyan.withOpacity(0.15),
-                                border: Border.all(color: NexusColors.accentCyan.withOpacity(0.2)),
+                                color: NexusColors.accentCyan.withValues(alpha: 0.15),
+                                border: Border.all(color: NexusColors.accentCyan.withValues(alpha: 0.2)),
                                 borderRadius: BorderRadius.circular(16),
                               ),
                               child: Row(
@@ -109,7 +109,7 @@ class NextClassCard extends StatelessWidget {
                                       shape: BoxShape.circle,
                                       boxShadow: [
                                         BoxShadow(
-                                          color: NexusColors.accentCyan.withOpacity(0.8),
+                                          color: NexusColors.accentCyan.withValues(alpha: 0.8),
                                           blurRadius: 8,
                                         ),
                                       ],

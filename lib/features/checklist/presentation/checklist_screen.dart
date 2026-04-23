@@ -1,16 +1,34 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:lucide_icons_flutter/lucide_icons_flutter.dart';
 import '../../../core/constants/colors.dart';
+import 'providers/checklist_provider.dart';
 import 'widgets/progress_ring.dart';
 import 'widgets/checklist_tile.dart';
+import 'widgets/add_checklist_bottom_sheet.dart';
 
-class ChecklistScreen extends StatelessWidget {
+class ChecklistScreen extends ConsumerWidget {
   const ChecklistScreen({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final checklistAsync = ref.watch(checklistProvider);
+
     return Scaffold(
       backgroundColor: NexusColors.background,
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          showModalBottomSheet(
+            context: context,
+            isScrollControlled: true,
+            backgroundColor: Colors.transparent,
+            builder: (context) => const AddChecklistBottomSheet(),
+          );
+        },
+        backgroundColor: NexusColors.accentCyan,
+        child: const Icon(LucideIcons.plus, color: Colors.black),
+      ),
       body: SafeArea(
         child: Stack(
           children: [
@@ -23,9 +41,9 @@ class ChecklistScreen extends StatelessWidget {
                 height: 200,
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
-                  color: NexusColors.accentCyan.withOpacity(0.1),
+                  color: NexusColors.accentCyan.withValues(alpha: 0.1),
                   boxShadow: [
-                    BoxShadow(color: NexusColors.accentCyan.withOpacity(0.1), blurRadius: 120),
+                    BoxShadow(color: NexusColors.accentCyan.withValues(alpha: 0.1), blurRadius: 120),
                   ],
                 ),
               ),
@@ -38,9 +56,9 @@ class ChecklistScreen extends StatelessWidget {
                 height: 150,
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
-                  color: NexusColors.accentBlue.withOpacity(0.1),
+                  color: NexusColors.accentBlue.withValues(alpha: 0.1),
                   boxShadow: [
-                    BoxShadow(color: NexusColors.accentBlue.withOpacity(0.1), blurRadius: 100),
+                    BoxShadow(color: NexusColors.accentBlue.withValues(alpha: 0.1), blurRadius: 100),
                   ],
                 ),
               ),
@@ -51,19 +69,28 @@ class ChecklistScreen extends StatelessWidget {
               children: [
                 _buildHeader(),
                 Expanded(
-                  child: SingleChildScrollView(
-                    padding: const EdgeInsets.fromLTRB(20, 24, 20, 100),
-                    child: Column(
-                      children: [
-                        _buildDateNavigator(),
-                        const SizedBox(height: 32),
-                        const ProgressRing(completed: 7, total: 10),
-                        const SizedBox(height: 32),
-                        _buildTabs(),
-                        const SizedBox(height: 24),
-                        _buildChecklist(),
-                      ],
-                    ),
+                  child: checklistAsync.when(
+                    data: (items) {
+                      final completedCount = items.where((i) => i.isCompleted).length;
+                      final totalCount = items.length;
+
+                      return SingleChildScrollView(
+                        padding: const EdgeInsets.fromLTRB(20, 24, 20, 100),
+                        child: Column(
+                          children: [
+                            _buildDateNavigator(),
+                            const SizedBox(height: 32),
+                            ProgressRing(completed: completedCount, total: totalCount),
+                            const SizedBox(height: 32),
+                            _buildTabs(),
+                            const SizedBox(height: 24),
+                            _buildChecklist(ref, items),
+                          ],
+                        ),
+                      );
+                    },
+                    loading: () => const Center(child: CircularProgressIndicator(color: NexusColors.accentCyan)),
+                    error: (e, _) => Center(child: Text('Error: $e', style: const TextStyle(color: Colors.white))),
                   ),
                 ),
               ],
@@ -87,7 +114,7 @@ class ChecklistScreen extends StatelessWidget {
               color: NexusColors.surfaceGlass,
               border: Border.all(color: NexusColors.glassBorder),
             ),
-            child: const Icon(Icons.person, size: 20, color: NexusColors.textSecondary),
+            child: const Icon(LucideIcons.user, size: 20, color: NexusColors.textSecondary),
           ),
           const Expanded(
             child: Center(
@@ -103,7 +130,7 @@ class ChecklistScreen extends StatelessWidget {
             ),
           ),
           IconButton(
-            icon: const Icon(Icons.settings, color: NexusColors.textSecondary),
+            icon: const Icon(LucideIcons.settings, color: NexusColors.textSecondary),
             onPressed: () {},
           ),
         ],
@@ -115,7 +142,7 @@ class ChecklistScreen extends StatelessWidget {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        _iconButton(Icons.chevron_left),
+        _iconButton(LucideIcons.chevronLeft),
         Text(
           'Rabu, 23 Apr',
           style: GoogleFonts.inter(
@@ -125,7 +152,7 @@ class ChecklistScreen extends StatelessWidget {
             letterSpacing: 0.5,
           ),
         ),
-        _iconButton(Icons.chevron_right),
+        _iconButton(LucideIcons.chevronRight),
       ],
     );
   }
@@ -157,7 +184,7 @@ class ChecklistScreen extends StatelessWidget {
             child: Container(
               padding: const EdgeInsets.symmetric(vertical: 8),
               decoration: BoxDecoration(
-                color: Colors.white.withOpacity(0.1),
+                color: Colors.white.withValues(alpha: 0.1),
                 borderRadius: BorderRadius.circular(6),
               ),
               alignment: Alignment.center,
@@ -204,42 +231,36 @@ class ChecklistScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildChecklist() {
+  Widget _buildChecklist(WidgetRef ref, List items) {
+    if (items.isEmpty) {
+      return Center(
+        child: Padding(
+          padding: const EdgeInsets.only(top: 40),
+          child: Text(
+            'No tasks found for today.',
+            style: GoogleFonts.inter(color: NexusColors.textSecondary),
+          ),
+        ),
+      );
+    }
+
     return Column(
-      children: [
-        const ChecklistTile(
-          title: 'Review Material Sains Bab 4',
-          subtitle: 'Prioritas Tinggi',
-        ),
-        const SizedBox(height: 8),
-        const ChecklistTile(
-          title: 'Draft Essay Sejarah',
-          subtitle: 'Due: 23:59',
-        ),
-        const SizedBox(height: 8),
-        const ChecklistTile(
-          title: 'Kirim Email ke Dosen Pembimbing',
-        ),
-        const Padding(
-          padding: EdgeInsets.symmetric(vertical: 16),
-          child: Divider(color: NexusColors.glassBorder, height: 1),
-        ),
-        const Opacity(
-          opacity: 0.5,
-          child: ChecklistTile(
-            title: 'Latihan Soal Kalkulus',
-            isCompleted: true,
+      children: items.map((item) {
+        return Padding(
+          padding: const EdgeInsets.only(bottom: 8),
+          child: Opacity(
+            opacity: item.isCompleted ? 0.5 : 1.0,
+            child: ChecklistTile(
+              title: item.title,
+              subtitle: item.priority != 'Sedang' ? item.priority : null,
+              isCompleted: item.isCompleted,
+              onTap: () {
+                ref.read(checklistProvider.notifier).toggleItem(item);
+              },
+            ),
           ),
-        ),
-        const SizedBox(height: 8),
-        const Opacity(
-          opacity: 0.5,
-          child: ChecklistTile(
-            title: 'Baca Bab 2 Pengantar Ekonomi',
-            isCompleted: true,
-          ),
-        ),
-      ],
+        );
+      }).toList(),
     );
   }
 }

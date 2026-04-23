@@ -35,7 +35,7 @@ class TodayScreen extends StatelessWidget {
   Widget _buildAppBar() {
     return SliverAppBar(
       pinned: true,
-      backgroundColor: NexusColors.background.withOpacity(0.8),
+      backgroundColor: NexusColors.background.withValues(alpha: 0.8),
       elevation: 0,
       title: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,

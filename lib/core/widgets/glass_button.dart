@@ -47,7 +47,7 @@ class _GlassButtonState extends State<GlassButton> {
             border: widget.isPrimary ? null : Border.all(color: NexusColors.glassBorder, width: 1),
             boxShadow: _isHovered && widget.isPrimary ? [
               BoxShadow(
-                color: NexusColors.accentCyan.withOpacity(0.5),
+                color: NexusColors.accentCyan.withValues(alpha: 0.5),
                 blurRadius: 20,
                 spreadRadius: 2,
               )

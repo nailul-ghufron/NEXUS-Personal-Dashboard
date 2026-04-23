@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../../../core/constants/colors.dart';
 import 'widgets/day_view.dart';
+import 'widgets/add_schedule_bottom_sheet.dart';
 
 class ScheduleScreen extends StatelessWidget {
   const ScheduleScreen({super.key});
@@ -10,6 +11,18 @@ class ScheduleScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: NexusColors.background,
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          showModalBottomSheet(
+            context: context,
+            isScrollControlled: true,
+            backgroundColor: Colors.transparent,
+            builder: (context) => const AddScheduleBottomSheet(),
+          );
+        },
+        backgroundColor: NexusColors.accentCyan,
+        child: const Icon(Icons.add, color: Colors.black),
+      ),
       body: SafeArea(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -73,7 +86,7 @@ class ScheduleScreen extends StatelessWidget {
                 border: Border.all(color: NexusColors.glassBorder),
                 borderRadius: BorderRadius.circular(6),
                 boxShadow: [
-                  BoxShadow(color: Colors.black.withOpacity(0.1), blurRadius: 4)
+                  BoxShadow(color: Colors.black.withValues(alpha: 0.1), blurRadius: 4)
                 ],
               ),
               alignment: Alignment.center,

@@ -1,35 +1,50 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:intl/intl.dart';
 import '../../../../core/constants/colors.dart';
+import '../providers/schedule_provider.dart';
+import '../../domain/models/schedule_item.dart';
 
-class DayView extends StatelessWidget {
+class DayView extends ConsumerWidget {
   const DayView({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final scheduleAsync = ref.watch(scheduleProvider);
+
     return Column(
       children: [
         _buildDateSelector(),
         const SizedBox(height: 16),
-        _buildScheduleCard(
-          startTime: '08:00',
-          type: 'Kampus',
-          duration: '2.5 Jam',
-          title: 'Data Structures & Algorithms',
-          location: 'Lab Komputer C101',
-          isKampus: true,
+        scheduleAsync.when(
+          data: (items) {
+            if (items.isEmpty) {
+              return Center(
+                child: Padding(
+                  padding: const EdgeInsets.only(top: 40),
+                  child: Text(
+                    'No schedule for today.',
+                    style: GoogleFonts.inter(color: NexusColors.textSecondary),
+                  ),
+                ),
+              );
+            }
+
+            return ListView.separated(
+              shrinkWrap: true,
+              physics: const NeverScrollableScrollPhysics(),
+              itemCount: items.length,
+              separatorBuilder: (context, index) => const SizedBox(height: 16),
+              itemBuilder: (context, index) {
+                final item = items[index];
+                return _buildScheduleCard(item);
+              },
+            );
+          },
+          loading: () => const Center(child: CircularProgressIndicator(color: NexusColors.accentCyan)),
+          error: (e, _) => Center(child: Text('Error: $e', style: const TextStyle(color: Colors.white))),
         ),
-        const SizedBox(height: 16),
-        _buildScheduleCard(
-          startTime: '18:30',
-          type: "Ma'had",
-          duration: '1.5 Jam',
-          title: "Kajian Tafsir Al-Qur'an",
-          location: 'Masjid Utama Kampus',
-          isKampus: false,
-        ),
-        const SizedBox(height: 24),
-        _buildEmptyState(),
       ],
     );
   }
@@ -71,15 +86,11 @@ class DayView extends StatelessWidget {
     );
   }
 
-  Widget _buildScheduleCard({
-    required String startTime,
-    required String type,
-    required String duration,
-    required String title,
-    required String location,
-    required bool isKampus,
-  }) {
+  Widget _buildScheduleCard(ScheduleItem item) {
+    final isKampus = item.type == 'Kampus';
     final accentColor = isKampus ? NexusColors.accentCyan : NexusColors.warning;
+    final startTime = DateFormat('HH:mm').format(item.startTime);
+    final duration = '${item.endTime.difference(item.startTime).inHours} Jam';
 
     return Container(
       decoration: BoxDecoration(
@@ -101,7 +112,7 @@ class DayView extends StatelessWidget {
                 ),
                 boxShadow: [
                   BoxShadow(
-                    color: accentColor.withOpacity(0.5),
+                    color: accentColor.withValues(alpha: 0.5),
                     blurRadius: 8,
                   )
                 ],
@@ -149,12 +160,12 @@ class DayView extends StatelessWidget {
                         Container(
                           padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
                           decoration: BoxDecoration(
-                            color: accentColor.withOpacity(0.1),
-                            border: Border.all(color: accentColor.withOpacity(0.2)),
+                            color: accentColor.withValues(alpha: 0.1),
+                            border: Border.all(color: accentColor.withValues(alpha: 0.2)),
                             borderRadius: BorderRadius.circular(4),
                           ),
                           child: Text(
-                            type,
+                            item.type,
                             style: GoogleFonts.inter(
                               fontSize: 12,
                               fontWeight: FontWeight.w600,
@@ -173,57 +184,35 @@ class DayView extends StatelessWidget {
                     ),
                     const SizedBox(height: 8),
                     Text(
-                      title,
+                      item.title,
                       style: GoogleFonts.inter(
                         fontSize: 20,
                         fontWeight: FontWeight.w600,
                         color: NexusColors.textPrimary,
                       ),
                     ),
-                    const SizedBox(height: 8),
-                    Row(
-                      children: [
-                        const Icon(Icons.location_on, size: 16, color: NexusColors.textSecondary),
-                        const SizedBox(width: 6),
-                        Text(
-                          location,
-                          style: GoogleFonts.inter(
-                            fontSize: 14,
-                            color: NexusColors.textSecondary,
+                    if (item.location != null) ...[
+                      const SizedBox(height: 8),
+                      Row(
+                        children: [
+                          const Icon(Icons.location_on, size: 16, color: NexusColors.textSecondary),
+                          const SizedBox(width: 6),
+                          Text(
+                            item.location!,
+                            style: GoogleFonts.inter(
+                              fontSize: 14,
+                              color: NexusColors.textSecondary,
+                            ),
                           ),
-                        ),
-                      ],
-                    ),
+                        ],
+                      ),
+                    ],
                   ],
                 ),
               ),
             ),
           ],
         ),
-      ),
-    );
-  }
-
-  Widget _buildEmptyState() {
-    return Container(
-      padding: const EdgeInsets.symmetric(vertical: 24),
-      decoration: BoxDecoration(
-        color: NexusColors.surfaceGlass.withOpacity(0.02),
-        border: Border.all(color: NexusColors.glassBorder, style: BorderStyle.solid),
-        // Wait, dashed border is not easily supported in Flutter without packages
-        // Let's stick to a subtle solid border
-        borderRadius: BorderRadius.circular(12),
-      ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          const Icon(Icons.coffee, color: NexusColors.textMuted),
-          const SizedBox(width: 8),
-          Text(
-            'Waktu kosong hingga 18:30',
-            style: GoogleFonts.inter(color: NexusColors.textSecondary),
-          ),
-        ],
       ),
     );
   }
