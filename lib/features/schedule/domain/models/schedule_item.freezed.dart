@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$ScheduleItem {
 
- String get id;@JsonKey(name: 'user_id') String get userId; String get title;@JsonKey(name: 'start_time') DateTime get startTime;@JsonKey(name: 'end_time') DateTime get endTime; String get type; String? get location;@JsonKey(name: 'created_at') DateTime? get createdAt;
+ String get id;@JsonKey(name: 'user_id') String get userId; String get title;@JsonKey(name: 'day_of_week') int get dayOfWeek;@JsonKey(name: 'start_time') String get startTime;@JsonKey(name: 'end_time') String? get endTime; String get type; String? get location; String? get lecturer; int? get sks;@JsonKey(name: 'class_group') String? get classGroup; String? get description;@JsonKey(name: 'created_at') DateTime? get createdAt;
 /// Create a copy of ScheduleItem
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -28,16 +28,16 @@ $ScheduleItemCopyWith<ScheduleItem> get copyWith => _$ScheduleItemCopyWithImpl<S
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is ScheduleItem&&(identical(other.id, id) || other.id == id)&&(identical(other.userId, userId) || other.userId == userId)&&(identical(other.title, title) || other.title == title)&&(identical(other.startTime, startTime) || other.startTime == startTime)&&(identical(other.endTime, endTime) || other.endTime == endTime)&&(identical(other.type, type) || other.type == type)&&(identical(other.location, location) || other.location == location)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is ScheduleItem&&(identical(other.id, id) || other.id == id)&&(identical(other.userId, userId) || other.userId == userId)&&(identical(other.title, title) || other.title == title)&&(identical(other.dayOfWeek, dayOfWeek) || other.dayOfWeek == dayOfWeek)&&(identical(other.startTime, startTime) || other.startTime == startTime)&&(identical(other.endTime, endTime) || other.endTime == endTime)&&(identical(other.type, type) || other.type == type)&&(identical(other.location, location) || other.location == location)&&(identical(other.lecturer, lecturer) || other.lecturer == lecturer)&&(identical(other.sks, sks) || other.sks == sks)&&(identical(other.classGroup, classGroup) || other.classGroup == classGroup)&&(identical(other.description, description) || other.description == description)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,userId,title,startTime,endTime,type,location,createdAt);
+int get hashCode => Object.hash(runtimeType,id,userId,title,dayOfWeek,startTime,endTime,type,location,lecturer,sks,classGroup,description,createdAt);
 
 @override
 String toString() {
-  return 'ScheduleItem(id: $id, userId: $userId, title: $title, startTime: $startTime, endTime: $endTime, type: $type, location: $location, createdAt: $createdAt)';
+  return 'ScheduleItem(id: $id, userId: $userId, title: $title, dayOfWeek: $dayOfWeek, startTime: $startTime, endTime: $endTime, type: $type, location: $location, lecturer: $lecturer, sks: $sks, classGroup: $classGroup, description: $description, createdAt: $createdAt)';
 }
 
 
@@ -48,7 +48,7 @@ abstract mixin class $ScheduleItemCopyWith<$Res>  {
   factory $ScheduleItemCopyWith(ScheduleItem value, $Res Function(ScheduleItem) _then) = _$ScheduleItemCopyWithImpl;
 @useResult
 $Res call({
- String id,@JsonKey(name: 'user_id') String userId, String title,@JsonKey(name: 'start_time') DateTime startTime,@JsonKey(name: 'end_time') DateTime endTime, String type, String? location,@JsonKey(name: 'created_at') DateTime? createdAt
+ String id,@JsonKey(name: 'user_id') String userId, String title,@JsonKey(name: 'day_of_week') int dayOfWeek,@JsonKey(name: 'start_time') String startTime,@JsonKey(name: 'end_time') String? endTime, String type, String? location, String? lecturer, int? sks,@JsonKey(name: 'class_group') String? classGroup, String? description,@JsonKey(name: 'created_at') DateTime? createdAt
 });
 
 
@@ -65,15 +65,20 @@ class _$ScheduleItemCopyWithImpl<$Res>
 
 /// Create a copy of ScheduleItem
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? userId = null,Object? title = null,Object? startTime = null,Object? endTime = null,Object? type = null,Object? location = freezed,Object? createdAt = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? userId = null,Object? title = null,Object? dayOfWeek = null,Object? startTime = null,Object? endTime = freezed,Object? type = null,Object? location = freezed,Object? lecturer = freezed,Object? sks = freezed,Object? classGroup = freezed,Object? description = freezed,Object? createdAt = freezed,}) {
   return _then(_self.copyWith(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,userId: null == userId ? _self.userId : userId // ignore: cast_nullable_to_non_nullable
 as String,title: null == title ? _self.title : title // ignore: cast_nullable_to_non_nullable
-as String,startTime: null == startTime ? _self.startTime : startTime // ignore: cast_nullable_to_non_nullable
-as DateTime,endTime: null == endTime ? _self.endTime : endTime // ignore: cast_nullable_to_non_nullable
-as DateTime,type: null == type ? _self.type : type // ignore: cast_nullable_to_non_nullable
+as String,dayOfWeek: null == dayOfWeek ? _self.dayOfWeek : dayOfWeek // ignore: cast_nullable_to_non_nullable
+as int,startTime: null == startTime ? _self.startTime : startTime // ignore: cast_nullable_to_non_nullable
+as String,endTime: freezed == endTime ? _self.endTime : endTime // ignore: cast_nullable_to_non_nullable
+as String?,type: null == type ? _self.type : type // ignore: cast_nullable_to_non_nullable
 as String,location: freezed == location ? _self.location : location // ignore: cast_nullable_to_non_nullable
+as String?,lecturer: freezed == lecturer ? _self.lecturer : lecturer // ignore: cast_nullable_to_non_nullable
+as String?,sks: freezed == sks ? _self.sks : sks // ignore: cast_nullable_to_non_nullable
+as int?,classGroup: freezed == classGroup ? _self.classGroup : classGroup // ignore: cast_nullable_to_non_nullable
+as String?,description: freezed == description ? _self.description : description // ignore: cast_nullable_to_non_nullable
 as String?,createdAt: freezed == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
 as DateTime?,
   ));
@@ -160,10 +165,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id, @JsonKey(name: 'user_id')  String userId,  String title, @JsonKey(name: 'start_time')  DateTime startTime, @JsonKey(name: 'end_time')  DateTime endTime,  String type,  String? location, @JsonKey(name: 'created_at')  DateTime? createdAt)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id, @JsonKey(name: 'user_id')  String userId,  String title, @JsonKey(name: 'day_of_week')  int dayOfWeek, @JsonKey(name: 'start_time')  String startTime, @JsonKey(name: 'end_time')  String? endTime,  String type,  String? location,  String? lecturer,  int? sks, @JsonKey(name: 'class_group')  String? classGroup,  String? description, @JsonKey(name: 'created_at')  DateTime? createdAt)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _ScheduleItem() when $default != null:
-return $default(_that.id,_that.userId,_that.title,_that.startTime,_that.endTime,_that.type,_that.location,_that.createdAt);case _:
+return $default(_that.id,_that.userId,_that.title,_that.dayOfWeek,_that.startTime,_that.endTime,_that.type,_that.location,_that.lecturer,_that.sks,_that.classGroup,_that.description,_that.createdAt);case _:
   return orElse();
 
 }
@@ -181,10 +186,10 @@ return $default(_that.id,_that.userId,_that.title,_that.startTime,_that.endTime,
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id, @JsonKey(name: 'user_id')  String userId,  String title, @JsonKey(name: 'start_time')  DateTime startTime, @JsonKey(name: 'end_time')  DateTime endTime,  String type,  String? location, @JsonKey(name: 'created_at')  DateTime? createdAt)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id, @JsonKey(name: 'user_id')  String userId,  String title, @JsonKey(name: 'day_of_week')  int dayOfWeek, @JsonKey(name: 'start_time')  String startTime, @JsonKey(name: 'end_time')  String? endTime,  String type,  String? location,  String? lecturer,  int? sks, @JsonKey(name: 'class_group')  String? classGroup,  String? description, @JsonKey(name: 'created_at')  DateTime? createdAt)  $default,) {final _that = this;
 switch (_that) {
 case _ScheduleItem():
-return $default(_that.id,_that.userId,_that.title,_that.startTime,_that.endTime,_that.type,_that.location,_that.createdAt);case _:
+return $default(_that.id,_that.userId,_that.title,_that.dayOfWeek,_that.startTime,_that.endTime,_that.type,_that.location,_that.lecturer,_that.sks,_that.classGroup,_that.description,_that.createdAt);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -201,10 +206,10 @@ return $default(_that.id,_that.userId,_that.title,_that.startTime,_that.endTime,
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id, @JsonKey(name: 'user_id')  String userId,  String title, @JsonKey(name: 'start_time')  DateTime startTime, @JsonKey(name: 'end_time')  DateTime endTime,  String type,  String? location, @JsonKey(name: 'created_at')  DateTime? createdAt)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id, @JsonKey(name: 'user_id')  String userId,  String title, @JsonKey(name: 'day_of_week')  int dayOfWeek, @JsonKey(name: 'start_time')  String startTime, @JsonKey(name: 'end_time')  String? endTime,  String type,  String? location,  String? lecturer,  int? sks, @JsonKey(name: 'class_group')  String? classGroup,  String? description, @JsonKey(name: 'created_at')  DateTime? createdAt)?  $default,) {final _that = this;
 switch (_that) {
 case _ScheduleItem() when $default != null:
-return $default(_that.id,_that.userId,_that.title,_that.startTime,_that.endTime,_that.type,_that.location,_that.createdAt);case _:
+return $default(_that.id,_that.userId,_that.title,_that.dayOfWeek,_that.startTime,_that.endTime,_that.type,_that.location,_that.lecturer,_that.sks,_that.classGroup,_that.description,_that.createdAt);case _:
   return null;
 
 }
@@ -216,16 +221,21 @@ return $default(_that.id,_that.userId,_that.title,_that.startTime,_that.endTime,
 @JsonSerializable()
 
 class _ScheduleItem implements ScheduleItem {
-  const _ScheduleItem({required this.id, @JsonKey(name: 'user_id') required this.userId, required this.title, @JsonKey(name: 'start_time') required this.startTime, @JsonKey(name: 'end_time') required this.endTime, this.type = 'Kampus', this.location, @JsonKey(name: 'created_at') this.createdAt});
+  const _ScheduleItem({required this.id, @JsonKey(name: 'user_id') required this.userId, required this.title, @JsonKey(name: 'day_of_week') required this.dayOfWeek, @JsonKey(name: 'start_time') required this.startTime, @JsonKey(name: 'end_time') this.endTime, this.type = 'campus', this.location, this.lecturer, this.sks, @JsonKey(name: 'class_group') this.classGroup, this.description, @JsonKey(name: 'created_at') this.createdAt});
   factory _ScheduleItem.fromJson(Map<String, dynamic> json) => _$ScheduleItemFromJson(json);
 
 @override final  String id;
 @override@JsonKey(name: 'user_id') final  String userId;
 @override final  String title;
-@override@JsonKey(name: 'start_time') final  DateTime startTime;
-@override@JsonKey(name: 'end_time') final  DateTime endTime;
+@override@JsonKey(name: 'day_of_week') final  int dayOfWeek;
+@override@JsonKey(name: 'start_time') final  String startTime;
+@override@JsonKey(name: 'end_time') final  String? endTime;
 @override@JsonKey() final  String type;
 @override final  String? location;
+@override final  String? lecturer;
+@override final  int? sks;
+@override@JsonKey(name: 'class_group') final  String? classGroup;
+@override final  String? description;
 @override@JsonKey(name: 'created_at') final  DateTime? createdAt;
 
 /// Create a copy of ScheduleItem
@@ -241,16 +251,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _ScheduleItem&&(identical(other.id, id) || other.id == id)&&(identical(other.userId, userId) || other.userId == userId)&&(identical(other.title, title) || other.title == title)&&(identical(other.startTime, startTime) || other.startTime == startTime)&&(identical(other.endTime, endTime) || other.endTime == endTime)&&(identical(other.type, type) || other.type == type)&&(identical(other.location, location) || other.location == location)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _ScheduleItem&&(identical(other.id, id) || other.id == id)&&(identical(other.userId, userId) || other.userId == userId)&&(identical(other.title, title) || other.title == title)&&(identical(other.dayOfWeek, dayOfWeek) || other.dayOfWeek == dayOfWeek)&&(identical(other.startTime, startTime) || other.startTime == startTime)&&(identical(other.endTime, endTime) || other.endTime == endTime)&&(identical(other.type, type) || other.type == type)&&(identical(other.location, location) || other.location == location)&&(identical(other.lecturer, lecturer) || other.lecturer == lecturer)&&(identical(other.sks, sks) || other.sks == sks)&&(identical(other.classGroup, classGroup) || other.classGroup == classGroup)&&(identical(other.description, description) || other.description == description)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,userId,title,startTime,endTime,type,location,createdAt);
+int get hashCode => Object.hash(runtimeType,id,userId,title,dayOfWeek,startTime,endTime,type,location,lecturer,sks,classGroup,description,createdAt);
 
 @override
 String toString() {
-  return 'ScheduleItem(id: $id, userId: $userId, title: $title, startTime: $startTime, endTime: $endTime, type: $type, location: $location, createdAt: $createdAt)';
+  return 'ScheduleItem(id: $id, userId: $userId, title: $title, dayOfWeek: $dayOfWeek, startTime: $startTime, endTime: $endTime, type: $type, location: $location, lecturer: $lecturer, sks: $sks, classGroup: $classGroup, description: $description, createdAt: $createdAt)';
 }
 
 
@@ -261,7 +271,7 @@ abstract mixin class _$ScheduleItemCopyWith<$Res> implements $ScheduleItemCopyWi
   factory _$ScheduleItemCopyWith(_ScheduleItem value, $Res Function(_ScheduleItem) _then) = __$ScheduleItemCopyWithImpl;
 @override @useResult
 $Res call({
- String id,@JsonKey(name: 'user_id') String userId, String title,@JsonKey(name: 'start_time') DateTime startTime,@JsonKey(name: 'end_time') DateTime endTime, String type, String? location,@JsonKey(name: 'created_at') DateTime? createdAt
+ String id,@JsonKey(name: 'user_id') String userId, String title,@JsonKey(name: 'day_of_week') int dayOfWeek,@JsonKey(name: 'start_time') String startTime,@JsonKey(name: 'end_time') String? endTime, String type, String? location, String? lecturer, int? sks,@JsonKey(name: 'class_group') String? classGroup, String? description,@JsonKey(name: 'created_at') DateTime? createdAt
 });
 
 
@@ -278,15 +288,20 @@ class __$ScheduleItemCopyWithImpl<$Res>
 
 /// Create a copy of ScheduleItem
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? userId = null,Object? title = null,Object? startTime = null,Object? endTime = null,Object? type = null,Object? location = freezed,Object? createdAt = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? userId = null,Object? title = null,Object? dayOfWeek = null,Object? startTime = null,Object? endTime = freezed,Object? type = null,Object? location = freezed,Object? lecturer = freezed,Object? sks = freezed,Object? classGroup = freezed,Object? description = freezed,Object? createdAt = freezed,}) {
   return _then(_ScheduleItem(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,userId: null == userId ? _self.userId : userId // ignore: cast_nullable_to_non_nullable
 as String,title: null == title ? _self.title : title // ignore: cast_nullable_to_non_nullable
-as String,startTime: null == startTime ? _self.startTime : startTime // ignore: cast_nullable_to_non_nullable
-as DateTime,endTime: null == endTime ? _self.endTime : endTime // ignore: cast_nullable_to_non_nullable
-as DateTime,type: null == type ? _self.type : type // ignore: cast_nullable_to_non_nullable
+as String,dayOfWeek: null == dayOfWeek ? _self.dayOfWeek : dayOfWeek // ignore: cast_nullable_to_non_nullable
+as int,startTime: null == startTime ? _self.startTime : startTime // ignore: cast_nullable_to_non_nullable
+as String,endTime: freezed == endTime ? _self.endTime : endTime // ignore: cast_nullable_to_non_nullable
+as String?,type: null == type ? _self.type : type // ignore: cast_nullable_to_non_nullable
 as String,location: freezed == location ? _self.location : location // ignore: cast_nullable_to_non_nullable
+as String?,lecturer: freezed == lecturer ? _self.lecturer : lecturer // ignore: cast_nullable_to_non_nullable
+as String?,sks: freezed == sks ? _self.sks : sks // ignore: cast_nullable_to_non_nullable
+as int?,classGroup: freezed == classGroup ? _self.classGroup : classGroup // ignore: cast_nullable_to_non_nullable
+as String?,description: freezed == description ? _self.description : description // ignore: cast_nullable_to_non_nullable
 as String?,createdAt: freezed == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
 as DateTime?,
   ));

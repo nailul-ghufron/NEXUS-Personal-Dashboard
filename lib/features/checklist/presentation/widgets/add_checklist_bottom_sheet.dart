@@ -17,7 +17,7 @@ class AddChecklistBottomSheet extends ConsumerStatefulWidget {
 
 class _AddChecklistBottomSheetState extends ConsumerState<AddChecklistBottomSheet> {
   final _titleController = TextEditingController();
-  String _priority = 'Sedang';
+  String _category = 'daily';
 
   @override
   void dispose() {
@@ -35,7 +35,7 @@ class _AddChecklistBottomSheetState extends ConsumerState<AddChecklistBottomShee
       id: const Uuid().v4(),
       userId: user.id,
       title: _titleController.text.trim(),
-      priority: _priority,
+      category: _category,
       createdAt: DateTime.now(),
     );
 
@@ -85,7 +85,7 @@ class _AddChecklistBottomSheetState extends ConsumerState<AddChecklistBottomShee
           ),
           const SizedBox(height: 20),
           Text(
-            'Priority',
+            'Category',
             style: GoogleFonts.inter(
               fontSize: 14,
               fontWeight: FontWeight.w600,
@@ -94,26 +94,30 @@ class _AddChecklistBottomSheetState extends ConsumerState<AddChecklistBottomShee
           ),
           const SizedBox(height: 12),
           Row(
-            children: ['Rendah', 'Sedang', 'Tinggi'].map((p) {
-              final isSelected = _priority == p;
+            children: [
+              {'label': 'Harian', 'value': 'daily'},
+              {'label': 'Mingguan', 'value': 'weekly'},
+              {'label': 'Custom', 'value': 'custom'},
+            ].map((c) {
+              final isSelected = _category == c['value'];
               return Padding(
                 padding: const EdgeInsets.only(right: 8),
                 child: ChoiceChip(
-                  label: Text(p),
+                  label: Text(c['label']!),
                   selected: isSelected,
                   onSelected: (val) {
-                    if (val) setState(() => _priority = p);
+                    if (val) setState(() => _category = c['value']!);
                   },
                   backgroundColor: NexusColors.surfaceGlass,
-                  selectedColor: NexusColors.accentCyan.withValues(alpha: 0.2),
+                  selectedColor: NexusColors.accentLavender.withValues(alpha: 0.2),
                   labelStyle: GoogleFonts.inter(
-                    color: isSelected ? NexusColors.accentCyan : NexusColors.textSecondary,
+                    color: isSelected ? NexusColors.accentLavender : NexusColors.textSecondary,
                     fontSize: 13,
                   ),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(8),
                     side: BorderSide(
-                      color: isSelected ? NexusColors.accentCyan : NexusColors.glassBorder,
+                      color: isSelected ? NexusColors.accentLavender : NexusColors.glassBorder,
                     ),
                   ),
                 ),
@@ -124,7 +128,7 @@ class _AddChecklistBottomSheetState extends ConsumerState<AddChecklistBottomShee
           ElevatedButton(
             onPressed: _submit,
             style: ElevatedButton.styleFrom(
-              backgroundColor: NexusColors.accentCyan,
+              backgroundColor: NexusColors.accentLavender,
               foregroundColor: Colors.black,
               padding: const EdgeInsets.symmetric(vertical: 16),
               shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),

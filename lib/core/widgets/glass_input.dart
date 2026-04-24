@@ -11,6 +11,8 @@ class GlassInput extends StatelessWidget {
   final bool obscureText;
   final TextInputType keyboardType;
   final ValueChanged<String>? onChanged;
+  final bool autoFocus;
+  final int? maxLines;
 
   const GlassInput({
     super.key,
@@ -21,6 +23,8 @@ class GlassInput extends StatelessWidget {
     this.obscureText = false,
     this.keyboardType = TextInputType.text,
     this.onChanged,
+    this.autoFocus = false,
+    this.maxLines = 1,
   });
 
   @override
@@ -28,25 +32,31 @@ class GlassInput extends StatelessWidget {
     return GlassCard(
       padding: const EdgeInsets.symmetric(horizontal: 16),
       borderRadius: 16,
-      height: 56,
-      child: Center(
-        child: TextField(
-          controller: controller,
-          obscureText: obscureText,
-          keyboardType: keyboardType,
-          onChanged: onChanged,
-          style: GoogleFonts.inter(color: NexusColors.textPrimary),
-          decoration: InputDecoration(
-            border: InputBorder.none,
-            hintText: hintText,
-            hintStyle: GoogleFonts.inter(color: NexusColors.textSecondary),
-            prefixIcon: prefixIcon,
-            prefixIconConstraints: const BoxConstraints(minWidth: 48, minHeight: 48),
-            suffixIcon: suffixIcon,
-            suffixIconConstraints: const BoxConstraints(minWidth: 48, minHeight: 48),
+      height: maxLines == 1 ? 56 : null,
+      child: Padding(
+        padding: EdgeInsets.symmetric(vertical: maxLines == 1 ? 0 : 12),
+        child: Center(
+          child: TextField(
+            controller: controller,
+            obscureText: obscureText,
+            keyboardType: keyboardType,
+            onChanged: onChanged,
+            autofocus: autoFocus,
+            maxLines: maxLines,
+            style: GoogleFonts.inter(color: NexusColors.textPrimary),
+            decoration: InputDecoration(
+              border: InputBorder.none,
+              hintText: hintText,
+              hintStyle: GoogleFonts.inter(color: NexusColors.textSecondary),
+              prefixIcon: prefixIcon,
+              prefixIconConstraints: const BoxConstraints(minWidth: 48, minHeight: 48),
+              suffixIcon: suffixIcon,
+              suffixIconConstraints: const BoxConstraints(minWidth: 48, minHeight: 48),
+            ),
           ),
         ),
       ),
     );
   }
 }
+

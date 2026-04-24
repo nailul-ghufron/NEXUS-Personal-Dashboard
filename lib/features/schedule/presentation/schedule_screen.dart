@@ -1,28 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../../../core/constants/colors.dart';
+import '../../../app/providers/ui_providers.dart';
 import 'widgets/day_view.dart';
-import 'widgets/add_schedule_bottom_sheet.dart';
 
-class ScheduleScreen extends StatelessWidget {
+class ScheduleScreen extends ConsumerWidget {
   const ScheduleScreen({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return Scaffold(
       backgroundColor: NexusColors.background,
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          showModalBottomSheet(
-            context: context,
-            isScrollControlled: true,
-            backgroundColor: Colors.transparent,
-            builder: (context) => const AddScheduleBottomSheet(),
-          );
-        },
-        backgroundColor: NexusColors.accentCyan,
-        child: const Icon(Icons.add, color: Colors.black),
-      ),
       body: SafeArea(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -53,7 +42,7 @@ class ScheduleScreen extends StatelessWidget {
             ),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 20),
-              child: _buildTabBar(),
+              child: _buildTabBar(ref),
             ),
             const SizedBox(height: 16),
             const Expanded(
@@ -68,7 +57,9 @@ class ScheduleScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildTabBar() {
+  Widget _buildTabBar(WidgetRef ref) {
+    final currentFilter = ref.watch(scheduleFilterProvider);
+    
     return Container(
       padding: const EdgeInsets.all(4),
       decoration: BoxDecoration(
@@ -78,60 +69,39 @@ class ScheduleScreen extends StatelessWidget {
       ),
       child: Row(
         children: [
-          Expanded(
-            child: Container(
-              padding: const EdgeInsets.symmetric(vertical: 8),
-              decoration: BoxDecoration(
-                color: NexusColors.surfaceGlass,
-                border: Border.all(color: NexusColors.glassBorder),
-                borderRadius: BorderRadius.circular(6),
-                boxShadow: [
-                  BoxShadow(color: Colors.black.withValues(alpha: 0.1), blurRadius: 4)
-                ],
-              ),
-              alignment: Alignment.center,
-              child: Text(
-                'Hari Ini',
-                style: GoogleFonts.inter(
-                  fontSize: 12,
-                  fontWeight: FontWeight.w600,
-                  letterSpacing: 0.6,
-                  color: NexusColors.textPrimary,
-                ),
-              ),
-            ),
-          ),
-          Expanded(
-            child: Container(
-              padding: const EdgeInsets.symmetric(vertical: 8),
-              alignment: Alignment.center,
-              child: Text(
-                'Mingguan',
-                style: GoogleFonts.inter(
-                  fontSize: 12,
-                  fontWeight: FontWeight.w600,
-                  letterSpacing: 0.6,
-                  color: NexusColors.textSecondary,
-                ),
-              ),
-            ),
-          ),
-          Expanded(
-            child: Container(
-              padding: const EdgeInsets.symmetric(vertical: 8),
-              alignment: Alignment.center,
-              child: Text(
-                'Kalender',
-                style: GoogleFonts.inter(
-                  fontSize: 12,
-                  fontWeight: FontWeight.w600,
-                  letterSpacing: 0.6,
-                  color: NexusColors.textSecondary,
-                ),
-              ),
-            ),
-          ),
+          _buildTabItem(ref, 'Hari Ini', 0, currentFilter == 0),
+          _buildTabItem(ref, 'Mingguan', 1, currentFilter == 1),
+          _buildTabItem(ref, 'Kalender', 2, currentFilter == 2),
         ],
+      ),
+    );
+  }
+
+  Widget _buildTabItem(WidgetRef ref, String label, int index, bool isSelected) {
+    return Expanded(
+      child: GestureDetector(
+        onTap: () => ref.read(scheduleFilterProvider.notifier).setFilter(index),
+        child: Container(
+          padding: const EdgeInsets.symmetric(vertical: 8),
+          decoration: BoxDecoration(
+            color: isSelected ? NexusColors.surfaceGlass : Colors.transparent,
+            border: isSelected ? Border.all(color: NexusColors.glassBorder) : null,
+            borderRadius: BorderRadius.circular(6),
+            boxShadow: isSelected 
+              ? [BoxShadow(color: Colors.black.withValues(alpha: 0.1), blurRadius: 4)]
+              : null,
+          ),
+          alignment: Alignment.center,
+          child: Text(
+            label,
+            style: GoogleFonts.inter(
+              fontSize: 12,
+              fontWeight: isSelected ? FontWeight.w600 : FontWeight.w500,
+              letterSpacing: 0.6,
+              color: isSelected ? NexusColors.textPrimary : NexusColors.textSecondary,
+            ),
+          ),
+        ),
       ),
     );
   }

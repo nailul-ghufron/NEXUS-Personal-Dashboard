@@ -14,13 +14,16 @@ class GreetingHeader extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.baseline,
           textBaseline: TextBaseline.alphabetic,
           children: [
-            Text(
-              'Selamat Pagi, Nailul',
-              style: GoogleFonts.inter(
-                fontSize: 32,
-                fontWeight: FontWeight.w700,
-                letterSpacing: -0.64,
-                color: NexusColors.textPrimary,
+            Expanded(
+              child: Text(
+                'Selamat Pagi, Nailul',
+                style: GoogleFonts.inter(
+                  fontSize: 32,
+                  fontWeight: FontWeight.w700,
+                  letterSpacing: -0.64,
+                  color: NexusColors.textPrimary,
+                ),
+                overflow: TextOverflow.ellipsis,
               ),
             ),
             const SizedBox(width: 8),
@@ -28,7 +31,7 @@ class GreetingHeader extends StatelessWidget {
               '✦',
               style: TextStyle(
                 fontSize: 24,
-                color: NexusColors.accentCyan,
+                color: NexusColors.accentLavender,
               ),
             ),
           ],

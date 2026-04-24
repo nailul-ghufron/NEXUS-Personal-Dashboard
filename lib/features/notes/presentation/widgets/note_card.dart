@@ -44,7 +44,6 @@ class NoteCard extends StatelessWidget {
         borderColor = const Color(0xFF22C55E).withValues(alpha: 0.15);
         break;
       case NoteTint.neutral:
-      default:
         bgColor = NexusColors.surfaceGlass;
         borderColor = NexusColors.glassBorder;
         break;

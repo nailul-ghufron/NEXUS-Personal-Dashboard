@@ -31,7 +31,7 @@ class ChecklistTile extends StatelessWidget {
           children: [
             Icon(
               isCompleted ? Icons.check_circle : Icons.radio_button_unchecked,
-              color: isCompleted ? NexusColors.accentCyan : NexusColors.textSecondary,
+              color: isCompleted ? NexusColors.accentLavender : NexusColors.textSecondary,
               size: 24,
             ),
             const SizedBox(width: 16),

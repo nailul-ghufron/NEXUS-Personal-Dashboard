@@ -33,10 +33,10 @@ class NextClassCard extends StatelessWidget {
                 Container(
                   width: 4,
                   decoration: BoxDecoration(
-                    color: NexusColors.accentCyan,
+                    color: NexusColors.accentLavender,
                     boxShadow: [
                       BoxShadow(
-                        color: NexusColors.accentCyan.withValues(alpha: 0.5),
+                        color: NexusColors.accentLavender.withValues(alpha: 0.5),
                         blurRadius: 8,
                       )
                     ],
@@ -94,8 +94,8 @@ class NextClassCard extends StatelessWidget {
                             Container(
                               padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
                               decoration: BoxDecoration(
-                                color: NexusColors.accentCyan.withValues(alpha: 0.15),
-                                border: Border.all(color: NexusColors.accentCyan.withValues(alpha: 0.2)),
+                                color: NexusColors.accentLavender.withValues(alpha: 0.15),
+                                border: Border.all(color: NexusColors.accentLavender.withValues(alpha: 0.2)),
                                 borderRadius: BorderRadius.circular(16),
                               ),
                               child: Row(
@@ -105,11 +105,11 @@ class NextClassCard extends StatelessWidget {
                                     width: 6,
                                     height: 6,
                                     decoration: BoxDecoration(
-                                      color: NexusColors.accentCyan,
+                                      color: NexusColors.accentLavender,
                                       shape: BoxShape.circle,
                                       boxShadow: [
                                         BoxShadow(
-                                          color: NexusColors.accentCyan.withValues(alpha: 0.8),
+                                          color: NexusColors.accentLavender.withValues(alpha: 0.8),
                                           blurRadius: 8,
                                         ),
                                       ],
@@ -121,7 +121,7 @@ class NextClassCard extends StatelessWidget {
                                     style: GoogleFonts.inter(
                                       fontSize: 12,
                                       fontWeight: FontWeight.w600,
-                                      color: NexusColors.accentCyan,
+                                      color: NexusColors.accentLavender,
                                     ),
                                   ),
                                 ],

@@ -1,22 +1,36 @@
 import 'dart:async';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+enum PomodoroMode {
+  work,
+  shortBreak,
+  longBreak,
+}
+
 class PomodoroState {
   final int timeLeft;
   final bool isRunning;
-  final bool isBreak;
+  final PomodoroMode mode;
+  final int completedSessions;
 
   PomodoroState({
     this.timeLeft = 25 * 60,
     this.isRunning = false,
-    this.isBreak = false,
+    this.mode = PomodoroMode.work,
+    this.completedSessions = 0,
   });
 
-  PomodoroState copyWith({int? timeLeft, bool? isRunning, bool? isBreak}) {
+  PomodoroState copyWith({
+    int? timeLeft,
+    bool? isRunning,
+    PomodoroMode? mode,
+    int? completedSessions,
+  }) {
     return PomodoroState(
       timeLeft: timeLeft ?? this.timeLeft,
       isRunning: isRunning ?? this.isRunning,
-      isBreak: isBreak ?? this.isBreak,
+      mode: mode ?? this.mode,
+      completedSessions: completedSessions ?? this.completedSessions,
     );
   }
 
@@ -25,12 +39,55 @@ class PomodoroState {
     final seconds = (timeLeft % 60).toString().padLeft(2, '0');
     return '$minutes:$seconds';
   }
+
+  double get progress {
+    int total;
+    switch (mode) {
+      case PomodoroMode.work:
+        total = 25 * 60;
+        break;
+      case PomodoroMode.shortBreak:
+        total = 5 * 60;
+        break;
+      case PomodoroMode.longBreak:
+        total = 15 * 60;
+        break;
+    }
+    return 1 - (timeLeft / total);
+  }
 }
 
-class PomodoroNotifier extends StateNotifier<PomodoroState> {
+class PomodoroNotifier extends Notifier<PomodoroState> {
   Timer? _timer;
 
-  PomodoroNotifier() : super(PomodoroState());
+  @override
+  PomodoroState build() {
+    ref.onDispose(() {
+      _timer?.cancel();
+    });
+    return PomodoroState();
+  }
+
+  void setMode(PomodoroMode mode) {
+    _timer?.cancel();
+    int time;
+    switch (mode) {
+      case PomodoroMode.work:
+        time = 25 * 60;
+        break;
+      case PomodoroMode.shortBreak:
+        time = 5 * 60;
+        break;
+      case PomodoroMode.longBreak:
+        time = 15 * 60;
+        break;
+    }
+    state = state.copyWith(
+      mode: mode,
+      timeLeft: time,
+      isRunning: false,
+    );
+  }
 
   void toggleTimer() {
     if (state.isRunning) {
@@ -43,25 +100,31 @@ class PomodoroNotifier extends StateNotifier<PomodoroState> {
           state = state.copyWith(timeLeft: state.timeLeft - 1);
         } else {
           _timer?.cancel();
-          state = state.copyWith(isRunning: false);
-          // Handle switch to break or session end logic here
+          _handleSessionComplete();
         }
       });
     }
   }
 
-  void reset() {
-    _timer?.cancel();
-    state = PomodoroState();
+  void _handleSessionComplete() {
+    if (state.mode == PomodoroMode.work) {
+      final newSessions = state.completedSessions + 1;
+      state = state.copyWith(
+        isRunning: false,
+        completedSessions: newSessions,
+      );
+      // Auto-switch to break? User might prefer manual.
+    } else {
+      state = state.copyWith(isRunning: false);
+    }
   }
 
-  @override
-  void dispose() {
+  void reset() {
     _timer?.cancel();
-    super.dispose();
+    setMode(state.mode);
   }
 }
 
-final pomodoroProvider = StateNotifierProvider<PomodoroNotifier, PomodoroState>((ref) {
+final pomodoroProvider = NotifierProvider<PomodoroNotifier, PomodoroState>(() {
   return PomodoroNotifier();
 });

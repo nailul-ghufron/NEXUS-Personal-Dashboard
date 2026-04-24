@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$ChecklistItem {
 
- String get id;@JsonKey(name: 'user_id') String get userId; String get title;@JsonKey(name: 'is_completed') bool get isCompleted; String get priority;@JsonKey(name: 'due_date') DateTime? get dueDate;@JsonKey(name: 'created_at') DateTime? get createdAt;
+ String get id;@JsonKey(name: 'user_id') String get userId; String get title;@JsonKey(name: 'is_completed') bool get isCompleted; String get category;@JsonKey(name: 'sort_order') int get sortOrder;@JsonKey(name: 'due_date') DateTime? get dueDate;@JsonKey(name: 'created_at') DateTime? get createdAt;
 /// Create a copy of ChecklistItem
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -28,16 +28,16 @@ $ChecklistItemCopyWith<ChecklistItem> get copyWith => _$ChecklistItemCopyWithImp
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is ChecklistItem&&(identical(other.id, id) || other.id == id)&&(identical(other.userId, userId) || other.userId == userId)&&(identical(other.title, title) || other.title == title)&&(identical(other.isCompleted, isCompleted) || other.isCompleted == isCompleted)&&(identical(other.priority, priority) || other.priority == priority)&&(identical(other.dueDate, dueDate) || other.dueDate == dueDate)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is ChecklistItem&&(identical(other.id, id) || other.id == id)&&(identical(other.userId, userId) || other.userId == userId)&&(identical(other.title, title) || other.title == title)&&(identical(other.isCompleted, isCompleted) || other.isCompleted == isCompleted)&&(identical(other.category, category) || other.category == category)&&(identical(other.sortOrder, sortOrder) || other.sortOrder == sortOrder)&&(identical(other.dueDate, dueDate) || other.dueDate == dueDate)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,userId,title,isCompleted,priority,dueDate,createdAt);
+int get hashCode => Object.hash(runtimeType,id,userId,title,isCompleted,category,sortOrder,dueDate,createdAt);
 
 @override
 String toString() {
-  return 'ChecklistItem(id: $id, userId: $userId, title: $title, isCompleted: $isCompleted, priority: $priority, dueDate: $dueDate, createdAt: $createdAt)';
+  return 'ChecklistItem(id: $id, userId: $userId, title: $title, isCompleted: $isCompleted, category: $category, sortOrder: $sortOrder, dueDate: $dueDate, createdAt: $createdAt)';
 }
 
 
@@ -48,7 +48,7 @@ abstract mixin class $ChecklistItemCopyWith<$Res>  {
   factory $ChecklistItemCopyWith(ChecklistItem value, $Res Function(ChecklistItem) _then) = _$ChecklistItemCopyWithImpl;
 @useResult
 $Res call({
- String id,@JsonKey(name: 'user_id') String userId, String title,@JsonKey(name: 'is_completed') bool isCompleted, String priority,@JsonKey(name: 'due_date') DateTime? dueDate,@JsonKey(name: 'created_at') DateTime? createdAt
+ String id,@JsonKey(name: 'user_id') String userId, String title,@JsonKey(name: 'is_completed') bool isCompleted, String category,@JsonKey(name: 'sort_order') int sortOrder,@JsonKey(name: 'due_date') DateTime? dueDate,@JsonKey(name: 'created_at') DateTime? createdAt
 });
 
 
@@ -65,14 +65,15 @@ class _$ChecklistItemCopyWithImpl<$Res>
 
 /// Create a copy of ChecklistItem
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? userId = null,Object? title = null,Object? isCompleted = null,Object? priority = null,Object? dueDate = freezed,Object? createdAt = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? userId = null,Object? title = null,Object? isCompleted = null,Object? category = null,Object? sortOrder = null,Object? dueDate = freezed,Object? createdAt = freezed,}) {
   return _then(_self.copyWith(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,userId: null == userId ? _self.userId : userId // ignore: cast_nullable_to_non_nullable
 as String,title: null == title ? _self.title : title // ignore: cast_nullable_to_non_nullable
 as String,isCompleted: null == isCompleted ? _self.isCompleted : isCompleted // ignore: cast_nullable_to_non_nullable
-as bool,priority: null == priority ? _self.priority : priority // ignore: cast_nullable_to_non_nullable
-as String,dueDate: freezed == dueDate ? _self.dueDate : dueDate // ignore: cast_nullable_to_non_nullable
+as bool,category: null == category ? _self.category : category // ignore: cast_nullable_to_non_nullable
+as String,sortOrder: null == sortOrder ? _self.sortOrder : sortOrder // ignore: cast_nullable_to_non_nullable
+as int,dueDate: freezed == dueDate ? _self.dueDate : dueDate // ignore: cast_nullable_to_non_nullable
 as DateTime?,createdAt: freezed == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
 as DateTime?,
   ));
@@ -159,10 +160,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id, @JsonKey(name: 'user_id')  String userId,  String title, @JsonKey(name: 'is_completed')  bool isCompleted,  String priority, @JsonKey(name: 'due_date')  DateTime? dueDate, @JsonKey(name: 'created_at')  DateTime? createdAt)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id, @JsonKey(name: 'user_id')  String userId,  String title, @JsonKey(name: 'is_completed')  bool isCompleted,  String category, @JsonKey(name: 'sort_order')  int sortOrder, @JsonKey(name: 'due_date')  DateTime? dueDate, @JsonKey(name: 'created_at')  DateTime? createdAt)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _ChecklistItem() when $default != null:
-return $default(_that.id,_that.userId,_that.title,_that.isCompleted,_that.priority,_that.dueDate,_that.createdAt);case _:
+return $default(_that.id,_that.userId,_that.title,_that.isCompleted,_that.category,_that.sortOrder,_that.dueDate,_that.createdAt);case _:
   return orElse();
 
 }
@@ -180,10 +181,10 @@ return $default(_that.id,_that.userId,_that.title,_that.isCompleted,_that.priori
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id, @JsonKey(name: 'user_id')  String userId,  String title, @JsonKey(name: 'is_completed')  bool isCompleted,  String priority, @JsonKey(name: 'due_date')  DateTime? dueDate, @JsonKey(name: 'created_at')  DateTime? createdAt)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id, @JsonKey(name: 'user_id')  String userId,  String title, @JsonKey(name: 'is_completed')  bool isCompleted,  String category, @JsonKey(name: 'sort_order')  int sortOrder, @JsonKey(name: 'due_date')  DateTime? dueDate, @JsonKey(name: 'created_at')  DateTime? createdAt)  $default,) {final _that = this;
 switch (_that) {
 case _ChecklistItem():
-return $default(_that.id,_that.userId,_that.title,_that.isCompleted,_that.priority,_that.dueDate,_that.createdAt);case _:
+return $default(_that.id,_that.userId,_that.title,_that.isCompleted,_that.category,_that.sortOrder,_that.dueDate,_that.createdAt);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -200,10 +201,10 @@ return $default(_that.id,_that.userId,_that.title,_that.isCompleted,_that.priori
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id, @JsonKey(name: 'user_id')  String userId,  String title, @JsonKey(name: 'is_completed')  bool isCompleted,  String priority, @JsonKey(name: 'due_date')  DateTime? dueDate, @JsonKey(name: 'created_at')  DateTime? createdAt)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id, @JsonKey(name: 'user_id')  String userId,  String title, @JsonKey(name: 'is_completed')  bool isCompleted,  String category, @JsonKey(name: 'sort_order')  int sortOrder, @JsonKey(name: 'due_date')  DateTime? dueDate, @JsonKey(name: 'created_at')  DateTime? createdAt)?  $default,) {final _that = this;
 switch (_that) {
 case _ChecklistItem() when $default != null:
-return $default(_that.id,_that.userId,_that.title,_that.isCompleted,_that.priority,_that.dueDate,_that.createdAt);case _:
+return $default(_that.id,_that.userId,_that.title,_that.isCompleted,_that.category,_that.sortOrder,_that.dueDate,_that.createdAt);case _:
   return null;
 
 }
@@ -215,14 +216,15 @@ return $default(_that.id,_that.userId,_that.title,_that.isCompleted,_that.priori
 @JsonSerializable()
 
 class _ChecklistItem implements ChecklistItem {
-  const _ChecklistItem({required this.id, @JsonKey(name: 'user_id') required this.userId, required this.title, @JsonKey(name: 'is_completed') this.isCompleted = false, this.priority = 'Sedang', @JsonKey(name: 'due_date') this.dueDate, @JsonKey(name: 'created_at') this.createdAt});
+  const _ChecklistItem({required this.id, @JsonKey(name: 'user_id') required this.userId, required this.title, @JsonKey(name: 'is_completed') this.isCompleted = false, this.category = 'daily', @JsonKey(name: 'sort_order') this.sortOrder = 0, @JsonKey(name: 'due_date') this.dueDate, @JsonKey(name: 'created_at') this.createdAt});
   factory _ChecklistItem.fromJson(Map<String, dynamic> json) => _$ChecklistItemFromJson(json);
 
 @override final  String id;
 @override@JsonKey(name: 'user_id') final  String userId;
 @override final  String title;
 @override@JsonKey(name: 'is_completed') final  bool isCompleted;
-@override@JsonKey() final  String priority;
+@override@JsonKey() final  String category;
+@override@JsonKey(name: 'sort_order') final  int sortOrder;
 @override@JsonKey(name: 'due_date') final  DateTime? dueDate;
 @override@JsonKey(name: 'created_at') final  DateTime? createdAt;
 
@@ -239,16 +241,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _ChecklistItem&&(identical(other.id, id) || other.id == id)&&(identical(other.userId, userId) || other.userId == userId)&&(identical(other.title, title) || other.title == title)&&(identical(other.isCompleted, isCompleted) || other.isCompleted == isCompleted)&&(identical(other.priority, priority) || other.priority == priority)&&(identical(other.dueDate, dueDate) || other.dueDate == dueDate)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _ChecklistItem&&(identical(other.id, id) || other.id == id)&&(identical(other.userId, userId) || other.userId == userId)&&(identical(other.title, title) || other.title == title)&&(identical(other.isCompleted, isCompleted) || other.isCompleted == isCompleted)&&(identical(other.category, category) || other.category == category)&&(identical(other.sortOrder, sortOrder) || other.sortOrder == sortOrder)&&(identical(other.dueDate, dueDate) || other.dueDate == dueDate)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,userId,title,isCompleted,priority,dueDate,createdAt);
+int get hashCode => Object.hash(runtimeType,id,userId,title,isCompleted,category,sortOrder,dueDate,createdAt);
 
 @override
 String toString() {
-  return 'ChecklistItem(id: $id, userId: $userId, title: $title, isCompleted: $isCompleted, priority: $priority, dueDate: $dueDate, createdAt: $createdAt)';
+  return 'ChecklistItem(id: $id, userId: $userId, title: $title, isCompleted: $isCompleted, category: $category, sortOrder: $sortOrder, dueDate: $dueDate, createdAt: $createdAt)';
 }
 
 
@@ -259,7 +261,7 @@ abstract mixin class _$ChecklistItemCopyWith<$Res> implements $ChecklistItemCopy
   factory _$ChecklistItemCopyWith(_ChecklistItem value, $Res Function(_ChecklistItem) _then) = __$ChecklistItemCopyWithImpl;
 @override @useResult
 $Res call({
- String id,@JsonKey(name: 'user_id') String userId, String title,@JsonKey(name: 'is_completed') bool isCompleted, String priority,@JsonKey(name: 'due_date') DateTime? dueDate,@JsonKey(name: 'created_at') DateTime? createdAt
+ String id,@JsonKey(name: 'user_id') String userId, String title,@JsonKey(name: 'is_completed') bool isCompleted, String category,@JsonKey(name: 'sort_order') int sortOrder,@JsonKey(name: 'due_date') DateTime? dueDate,@JsonKey(name: 'created_at') DateTime? createdAt
 });
 
 
@@ -276,14 +278,15 @@ class __$ChecklistItemCopyWithImpl<$Res>
 
 /// Create a copy of ChecklistItem
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? userId = null,Object? title = null,Object? isCompleted = null,Object? priority = null,Object? dueDate = freezed,Object? createdAt = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? userId = null,Object? title = null,Object? isCompleted = null,Object? category = null,Object? sortOrder = null,Object? dueDate = freezed,Object? createdAt = freezed,}) {
   return _then(_ChecklistItem(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,userId: null == userId ? _self.userId : userId // ignore: cast_nullable_to_non_nullable
 as String,title: null == title ? _self.title : title // ignore: cast_nullable_to_non_nullable
 as String,isCompleted: null == isCompleted ? _self.isCompleted : isCompleted // ignore: cast_nullable_to_non_nullable
-as bool,priority: null == priority ? _self.priority : priority // ignore: cast_nullable_to_non_nullable
-as String,dueDate: freezed == dueDate ? _self.dueDate : dueDate // ignore: cast_nullable_to_non_nullable
+as bool,category: null == category ? _self.category : category // ignore: cast_nullable_to_non_nullable
+as String,sortOrder: null == sortOrder ? _self.sortOrder : sortOrder // ignore: cast_nullable_to_non_nullable
+as int,dueDate: freezed == dueDate ? _self.dueDate : dueDate // ignore: cast_nullable_to_non_nullable
 as DateTime?,createdAt: freezed == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
 as DateTime?,
   ));

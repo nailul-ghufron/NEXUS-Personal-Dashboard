@@ -5,7 +5,8 @@ import '../../../core/constants/colors.dart';
 import '../../../core/widgets/glass_input.dart';
 import 'providers/notes_provider.dart';
 import 'widgets/note_card.dart';
-import 'widgets/add_note_dialog.dart';
+import '../../ai_insight/data/gemini_service.dart';
+import '../../../core/widgets/glass_card.dart';
 
 class NotesScreen extends ConsumerStatefulWidget {
   const NotesScreen({super.key});
@@ -35,9 +36,9 @@ class _NotesScreenState extends ConsumerState<NotesScreen> {
                 height: 300,
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
-                  color: NexusColors.accentCyan.withValues(alpha: 0.1),
+                  color: NexusColors.accentLavender.withValues(alpha: 0.1),
                   boxShadow: [
-                    BoxShadow(color: NexusColors.accentCyan.withValues(alpha: 0.1), blurRadius: 150),
+                    BoxShadow(color: NexusColors.accentLavender.withValues(alpha: 0.1), blurRadius: 150),
                   ],
                 ),
               ),
@@ -50,9 +51,9 @@ class _NotesScreenState extends ConsumerState<NotesScreen> {
                 height: 300,
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
-                  color: NexusColors.accentBlue.withValues(alpha: 0.1),
+                  color: NexusColors.accentViolet.withValues(alpha: 0.1),
                   boxShadow: [
-                    BoxShadow(color: NexusColors.accentBlue.withValues(alpha: 0.1), blurRadius: 150),
+                    BoxShadow(color: NexusColors.accentViolet.withValues(alpha: 0.1), blurRadius: 150),
                   ],
                 ),
               ),
@@ -81,7 +82,7 @@ class _NotesScreenState extends ConsumerState<NotesScreen> {
                         ),
                       );
                     },
-                    loading: () => const Center(child: CircularProgressIndicator(color: NexusColors.accentCyan)),
+                    loading: () => const Center(child: CircularProgressIndicator(color: NexusColors.accentLavender)),
                     error: (e, _) => Center(child: Text('Error: $e', style: const TextStyle(color: Colors.white))),
                   ),
                 ),
@@ -108,25 +109,95 @@ class _NotesScreenState extends ConsumerState<NotesScreen> {
               color: NexusColors.textPrimary,
             ),
           ),
-          Container(
-            decoration: BoxDecoration(
-              shape: BoxShape.circle,
-              gradient: NexusColors.accentGrad,
-              boxShadow: [
-                BoxShadow(color: NexusColors.accentCyan.withValues(alpha: 0.4), blurRadius: 12),
-              ],
-            ),
-            child: IconButton(
-              icon: const Icon(Icons.add, color: Colors.white),
-              onPressed: () {
-                showDialog(
-                  context: context,
-                  builder: (context) => const AddNoteDialog(),
-                );
-              },
-            ),
+          IconButton(
+            icon: const Icon(Icons.auto_awesome, color: NexusColors.accentLavender),
+            tooltip: 'AI Summary',
+            onPressed: () => _showAISummary(context, ref),
           ),
         ],
+      ),
+    );
+  }
+
+  void _showAISummary(BuildContext context, WidgetRef ref) async {
+    final notesAsync = ref.read(notesProvider);
+    final notes = notesAsync.value ?? [];
+    
+    if (notes.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('No notes to summarize')),
+      );
+      return;
+    }
+
+    final noteTexts = notes.map((n) => '${n.title}: ${n.content ?? ''}').toList();
+    
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        backgroundColor: Colors.transparent,
+        contentPadding: EdgeInsets.zero,
+        content: GlassCard(
+          padding: const EdgeInsets.all(24),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Row(
+                children: [
+                  const Icon(Icons.auto_awesome, color: NexusColors.accentLavender),
+                  const SizedBox(width: 12),
+                  Text(
+                    'AI Insights',
+                    style: GoogleFonts.inter(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                      color: NexusColors.textPrimary,
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 16),
+              FutureBuilder<String>(
+                future: ref.read(geminiServiceProvider).summarizeNotes(noteTexts),
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return const Center(
+                      child: CircularProgressIndicator(color: NexusColors.accentLavender),
+                    );
+                  }
+                  if (snapshot.hasError) {
+                    return Text('Error: ${snapshot.error}', style: const TextStyle(color: Colors.red));
+                  }
+                  return ConstrainedBox(
+                    constraints: const BoxConstraints(maxHeight: 400),
+                    child: SingleChildScrollView(
+                      child: Text(
+                        snapshot.data ?? 'No summary available.',
+                        style: GoogleFonts.inter(
+                          fontSize: 14,
+                          color: NexusColors.textSecondary,
+                          height: 1.5,
+                        ),
+                      ),
+                    ),
+                  );
+                },
+              ),
+              const SizedBox(height: 24),
+              SizedBox(
+                width: double.infinity,
+                child: ElevatedButton(
+                  onPressed: () => Navigator.pop(context),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: NexusColors.accentLavender,
+                    foregroundColor: Colors.black,
+                  ),
+                  child: const Text('Close'),
+                ),
+              ),
+            ],
+          ),
+        ),
       ),
     );
   }

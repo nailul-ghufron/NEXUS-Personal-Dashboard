@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:lucide_icons_flutter/lucide_icons_flutter.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 import '../../../core/constants/colors.dart';
+import '../../../app/providers/ui_providers.dart';
 import 'providers/checklist_provider.dart';
 import 'widgets/progress_ring.dart';
 import 'widgets/checklist_tile.dart';
-import 'widgets/add_checklist_bottom_sheet.dart';
 
 class ChecklistScreen extends ConsumerWidget {
   const ChecklistScreen({super.key});
@@ -17,18 +17,6 @@ class ChecklistScreen extends ConsumerWidget {
 
     return Scaffold(
       backgroundColor: NexusColors.background,
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          showModalBottomSheet(
-            context: context,
-            isScrollControlled: true,
-            backgroundColor: Colors.transparent,
-            builder: (context) => const AddChecklistBottomSheet(),
-          );
-        },
-        backgroundColor: NexusColors.accentCyan,
-        child: const Icon(LucideIcons.plus, color: Colors.black),
-      ),
       body: SafeArea(
         child: Stack(
           children: [
@@ -41,9 +29,9 @@ class ChecklistScreen extends ConsumerWidget {
                 height: 200,
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
-                  color: NexusColors.accentCyan.withValues(alpha: 0.1),
+                  color: NexusColors.accentLavender.withValues(alpha: 0.1),
                   boxShadow: [
-                    BoxShadow(color: NexusColors.accentCyan.withValues(alpha: 0.1), blurRadius: 120),
+                    BoxShadow(color: NexusColors.accentLavender.withValues(alpha: 0.1), blurRadius: 120),
                   ],
                 ),
               ),
@@ -56,9 +44,9 @@ class ChecklistScreen extends ConsumerWidget {
                 height: 150,
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
-                  color: NexusColors.accentBlue.withValues(alpha: 0.1),
+                  color: NexusColors.accentViolet.withValues(alpha: 0.1),
                   boxShadow: [
-                    BoxShadow(color: NexusColors.accentBlue.withValues(alpha: 0.1), blurRadius: 100),
+                    BoxShadow(color: NexusColors.accentViolet.withValues(alpha: 0.1), blurRadius: 100),
                   ],
                 ),
               ),
@@ -71,8 +59,11 @@ class ChecklistScreen extends ConsumerWidget {
                 Expanded(
                   child: checklistAsync.when(
                     data: (items) {
-                      final completedCount = items.where((i) => i.isCompleted).length;
-                      final totalCount = items.length;
+                      final currentFilter = ref.watch(checklistFilterProvider);
+                      final filteredItems = items.where((item) => item.category == currentFilter).toList();
+                      
+                      final completedCount = filteredItems.where((i) => i.isCompleted).length;
+                      final totalCount = filteredItems.length;
 
                       return SingleChildScrollView(
                         padding: const EdgeInsets.fromLTRB(20, 24, 20, 100),
@@ -82,14 +73,14 @@ class ChecklistScreen extends ConsumerWidget {
                             const SizedBox(height: 32),
                             ProgressRing(completed: completedCount, total: totalCount),
                             const SizedBox(height: 32),
-                            _buildTabs(),
+                            _buildTabs(ref),
                             const SizedBox(height: 24),
-                            _buildChecklist(ref, items),
+                            _buildChecklist(ref, filteredItems),
                           ],
                         ),
                       );
                     },
-                    loading: () => const Center(child: CircularProgressIndicator(color: NexusColors.accentCyan)),
+                    loading: () => const Center(child: CircularProgressIndicator(color: NexusColors.accentLavender)),
                     error: (e, _) => Center(child: Text('Error: $e', style: const TextStyle(color: Colors.white))),
                   ),
                 ),
@@ -114,7 +105,7 @@ class ChecklistScreen extends ConsumerWidget {
               color: NexusColors.surfaceGlass,
               border: Border.all(color: NexusColors.glassBorder),
             ),
-            child: const Icon(LucideIcons.user, size: 20, color: NexusColors.textSecondary),
+            child: Icon(LucideIcons.user, size: 20, color: NexusColors.textSecondary),
           ),
           const Expanded(
             child: Center(
@@ -123,14 +114,14 @@ class ChecklistScreen extends ConsumerWidget {
                 style: TextStyle(
                   fontSize: 20,
                   fontWeight: FontWeight.bold,
-                  color: NexusColors.accentCyan,
+                  color: NexusColors.accentLavender,
                   letterSpacing: 1,
                 ),
               ),
             ),
           ),
           IconButton(
-            icon: const Icon(LucideIcons.settings, color: NexusColors.textSecondary),
+            icon: Icon(LucideIcons.settings, color: NexusColors.textSecondary),
             onPressed: () {},
           ),
         ],
@@ -170,7 +161,9 @@ class ChecklistScreen extends ConsumerWidget {
     );
   }
 
-  Widget _buildTabs() {
+  Widget _buildTabs(WidgetRef ref) {
+    final currentFilter = ref.watch(checklistFilterProvider);
+    
     return Container(
       padding: const EdgeInsets.all(4),
       decoration: BoxDecoration(
@@ -180,53 +173,34 @@ class ChecklistScreen extends ConsumerWidget {
       ),
       child: Row(
         children: [
-          Expanded(
-            child: Container(
-              padding: const EdgeInsets.symmetric(vertical: 8),
-              decoration: BoxDecoration(
-                color: Colors.white.withValues(alpha: 0.1),
-                borderRadius: BorderRadius.circular(6),
-              ),
-              alignment: Alignment.center,
-              child: Text(
-                'Harian',
-                style: GoogleFonts.inter(
-                  fontSize: 14,
-                  fontWeight: FontWeight.w500,
-                  color: NexusColors.textPrimary,
-                ),
-              ),
-            ),
-          ),
-          Expanded(
-            child: Container(
-              padding: const EdgeInsets.symmetric(vertical: 8),
-              alignment: Alignment.center,
-              child: Text(
-                'Mingguan',
-                style: GoogleFonts.inter(
-                  fontSize: 14,
-                  fontWeight: FontWeight.w500,
-                  color: NexusColors.textSecondary,
-                ),
-              ),
-            ),
-          ),
-          Expanded(
-            child: Container(
-              padding: const EdgeInsets.symmetric(vertical: 8),
-              alignment: Alignment.center,
-              child: Text(
-                'Custom',
-                style: GoogleFonts.inter(
-                  fontSize: 14,
-                  fontWeight: FontWeight.w500,
-                  color: NexusColors.textSecondary,
-                ),
-              ),
-            ),
-          ),
+          _buildTabItem(ref, 'Harian', 'daily', currentFilter == 'daily'),
+          _buildTabItem(ref, 'Mingguan', 'weekly', currentFilter == 'weekly'),
+          _buildTabItem(ref, 'Custom', 'custom', currentFilter == 'custom'),
         ],
+      ),
+    );
+  }
+
+  Widget _buildTabItem(WidgetRef ref, String label, String value, bool isSelected) {
+    return Expanded(
+      child: GestureDetector(
+        onTap: () => ref.read(checklistFilterProvider.notifier).setFilter(value),
+        child: Container(
+          padding: const EdgeInsets.symmetric(vertical: 8),
+          decoration: BoxDecoration(
+            color: isSelected ? Colors.white.withValues(alpha: 0.1) : Colors.transparent,
+            borderRadius: BorderRadius.circular(6),
+          ),
+          alignment: Alignment.center,
+          child: Text(
+            label,
+            style: GoogleFonts.inter(
+              fontSize: 14,
+              fontWeight: isSelected ? FontWeight.w600 : FontWeight.w500,
+              color: isSelected ? NexusColors.textPrimary : NexusColors.textSecondary,
+            ),
+          ),
+        ),
       ),
     );
   }
@@ -252,7 +226,7 @@ class ChecklistScreen extends ConsumerWidget {
             opacity: item.isCompleted ? 0.5 : 1.0,
             child: ChecklistTile(
               title: item.title,
-              subtitle: item.priority != 'Sedang' ? item.priority : null,
+              subtitle: null,
               isCompleted: item.isCompleted,
               onTap: () {
                 ref.read(checklistProvider.notifier).toggleItem(item);

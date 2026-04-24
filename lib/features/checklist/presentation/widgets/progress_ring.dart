@@ -33,7 +33,7 @@ class ProgressRing extends StatelessWidget {
                 value: percentage,
                 strokeWidth: 6,
                 backgroundColor: Colors.transparent,
-                color: NexusColors.accentCyan,
+                color: NexusColors.accentLavender,
               ),
               // Shadow for glow effect
               Container(
@@ -41,7 +41,7 @@ class ProgressRing extends StatelessWidget {
                   shape: BoxShape.circle,
                   boxShadow: [
                     BoxShadow(
-                      color: NexusColors.accentCyan.withValues(alpha: 0.2),
+                      color: NexusColors.accentLavender.withValues(alpha: 0.2),
                       blurRadius: 20,
                       spreadRadius: -10,
                     ),
@@ -82,7 +82,7 @@ class ProgressRing extends StatelessWidget {
                         fontSize: 12,
                         fontWeight: FontWeight.w600,
                         letterSpacing: 0.6,
-                        color: NexusColors.accentCyan,
+                        color: NexusColors.accentLavender,
                       ),
                     ),
                   ],

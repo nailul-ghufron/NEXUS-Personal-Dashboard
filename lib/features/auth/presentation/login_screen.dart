@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:lucide_icons_flutter/lucide_icons_flutter.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 import '../../../core/constants/colors.dart';
 import '../../../core/widgets/glass_card.dart';
 import '../../../core/widgets/glass_button.dart';
@@ -84,7 +84,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
           if (_isLoading)
             Container(
               color: Colors.black.withValues(alpha: 0.5),
-              child: const Center(child: CircularProgressIndicator(color: NexusColors.accentCyan)),
+              child: const Center(child: CircularProgressIndicator(color: NexusColors.accentLavender)),
             ),
         ],
       ),
@@ -103,12 +103,12 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
             borderRadius: BorderRadius.circular(12),
             boxShadow: [
               BoxShadow(
-                color: NexusColors.accentCyan.withValues(alpha: 0.15),
+                color: NexusColors.accentLavender.withValues(alpha: 0.15),
                 blurRadius: 20,
               )
             ],
           ),
-          child: const Icon(LucideIcons.scan, color: NexusColors.accentCyan),
+          child: Icon(LucideIcons.scan, color: NexusColors.accentLavender),
         ),
         const SizedBox(height: 16),
         ShaderMask(
@@ -146,7 +146,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
           GlassInput(
             controller: _emailController,
             hintText: 'student@university.edu',
-            prefixIcon: const Icon(LucideIcons.mail, color: NexusColors.textMuted),
+            prefixIcon: Icon(LucideIcons.mail, color: NexusColors.textMuted),
             keyboardType: TextInputType.emailAddress,
           ),
           const SizedBox(height: 16),
@@ -158,7 +158,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                 'Forgot?',
                 style: GoogleFonts.inter(
                   fontSize: 12,
-                  color: NexusColors.accentCyan,
+                  color: NexusColors.accentLavender,
                 ),
               ),
             ],
@@ -168,7 +168,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
             controller: _passwordController,
             hintText: '••••••••',
             obscureText: !_isPasswordVisible,
-            prefixIcon: const Icon(LucideIcons.lock, color: NexusColors.textMuted),
+            prefixIcon: Icon(LucideIcons.lock, color: NexusColors.textMuted),
             suffixIcon: IconButton(
               icon: Icon(
                 _isPasswordVisible ? LucideIcons.eye : LucideIcons.eyeOff,
@@ -220,7 +220,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                const Icon(LucideIcons.chrome, size: 24, color: Colors.white),
+                Icon(LucideIcons.globe, size: 24, color: Colors.white),
                 const SizedBox(width: 8),
                 Text(
                   'Continue with Google',
@@ -267,7 +267,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
           style: GoogleFonts.inter(
             fontSize: 14,
             fontWeight: FontWeight.w600,
-            color: NexusColors.accentCyan,
+            color: NexusColors.accentLavender,
           ),
         ),
       ],

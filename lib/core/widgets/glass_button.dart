@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_animate/flutter_animate.dart';
 import '../constants/colors.dart';
-import 'glass_card.dart';
 
 class GlassButton extends StatefulWidget {
   final VoidCallback onPressed;
@@ -47,7 +45,7 @@ class _GlassButtonState extends State<GlassButton> {
             border: widget.isPrimary ? null : Border.all(color: NexusColors.glassBorder, width: 1),
             boxShadow: _isHovered && widget.isPrimary ? [
               BoxShadow(
-                color: NexusColors.accentCyan.withValues(alpha: 0.5),
+                color: NexusColors.accentLavender.withValues(alpha: 0.5),
                 blurRadius: 20,
                 spreadRadius: 2,
               )

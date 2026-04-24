@@ -38,7 +38,7 @@ class TodayHabitsCard extends StatelessWidget {
                           value: 0.5,
                           strokeWidth: 4,
                           backgroundColor: Colors.white.withValues(alpha: 0.05),
-                          color: NexusColors.accentCyan,
+                          color: NexusColors.accentLavender,
                         ),
                         Center(
                           child: Text(
@@ -105,14 +105,14 @@ class TodayHabitsCard extends StatelessWidget {
             width: 24,
             height: 24,
             decoration: BoxDecoration(
-              color: isDone ? NexusColors.accentCyan.withValues(alpha: 0.2) : Colors.transparent,
+              color: isDone ? NexusColors.accentLavender.withValues(alpha: 0.2) : Colors.transparent,
               border: Border.all(
-                color: isDone ? NexusColors.accentCyan : Colors.white.withValues(alpha: 0.2),
+                color: isDone ? NexusColors.accentLavender : Colors.white.withValues(alpha: 0.2),
               ),
               borderRadius: BorderRadius.circular(4),
             ),
             child: isDone
-                ? const Icon(Icons.check, size: 18, color: NexusColors.accentCyan)
+                ? const Icon(Icons.check, size: 18, color: NexusColors.accentLavender)
                 : null,
           ),
           const SizedBox(width: 12),

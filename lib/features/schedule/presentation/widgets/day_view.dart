@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:intl/intl.dart';
 import '../../../../core/constants/colors.dart';
+import '../../../../app/providers/ui_providers.dart';
 import '../providers/schedule_provider.dart';
 import '../../domain/models/schedule_item.dart';
+import 'package:intl/intl.dart';
 
 class DayView extends ConsumerWidget {
   const DayView({super.key});
@@ -12,19 +13,41 @@ class DayView extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final scheduleAsync = ref.watch(scheduleProvider);
+    final currentFilter = ref.watch(scheduleFilterProvider);
 
     return Column(
       children: [
-        _buildDateSelector(),
+        if (currentFilter == 0) _buildDateSelector(),
+        if (currentFilter == 1) _buildWeeklyHeader(),
+        if (currentFilter == 2) _buildCalendarPlaceholder(),
         const SizedBox(height: 16),
         scheduleAsync.when(
           data: (items) {
-            if (items.isEmpty) {
+            List<ScheduleItem> filteredItems = items;
+            
+            if (currentFilter == 0) {
+              // Today's filter (0=Mon in DB, DateTime.now().weekday is 1=Mon)
+              final today = (DateTime.now().weekday - 1);
+              filteredItems = items.where((item) => item.dayOfWeek == today).toList();
+              // Sort by start time
+              filteredItems.sort((a, b) => a.startTime.compareTo(b.startTime));
+            } else if (currentFilter == 1) {
+              // Weekly filter: sort by day then by time
+              filteredItems = List.from(items);
+              filteredItems.sort((a, b) {
+                if (a.dayOfWeek != b.dayOfWeek) {
+                  return a.dayOfWeek.compareTo(b.dayOfWeek);
+                }
+                return a.startTime.compareTo(b.startTime);
+              });
+            }
+
+            if (filteredItems.isEmpty) {
               return Center(
                 child: Padding(
                   padding: const EdgeInsets.only(top: 40),
                   child: Text(
-                    'No schedule for today.',
+                    currentFilter == 0 ? 'No schedule for today.' : 'No schedules found.',
                     style: GoogleFonts.inter(color: NexusColors.textSecondary),
                   ),
                 ),
@@ -34,32 +57,69 @@ class DayView extends ConsumerWidget {
             return ListView.separated(
               shrinkWrap: true,
               physics: const NeverScrollableScrollPhysics(),
-              itemCount: items.length,
+              itemCount: filteredItems.length,
               separatorBuilder: (context, index) => const SizedBox(height: 16),
               itemBuilder: (context, index) {
-                final item = items[index];
+                final item = filteredItems[index];
+                // Show day header if weekly view and day changed
+                bool showDayHeader = currentFilter == 1 && 
+                  (index == 0 || filteredItems[index-1].dayOfWeek != item.dayOfWeek);
+                
+                if (showDayHeader) {
+                  return Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 8),
+                        child: Text(
+                          _getDayName(item.dayOfWeek),
+                          style: GoogleFonts.inter(
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                            color: NexusColors.accentLavender,
+                          ),
+                        ),
+                      ),
+                      _buildScheduleCard(item),
+                    ],
+                  );
+                }
                 return _buildScheduleCard(item);
               },
             );
           },
-          loading: () => const Center(child: CircularProgressIndicator(color: NexusColors.accentCyan)),
-          error: (e, _) => Center(child: Text('Error: $e', style: const TextStyle(color: Colors.white))),
+          loading: () => const Center(
+            child: CircularProgressIndicator(color: NexusColors.accentLavender),
+          ),
+          error: (e, _) => Center(
+            child: Text(
+              'Error: $e',
+              style: const TextStyle(color: Colors.white),
+            ),
+          ),
         ),
       ],
     );
   }
 
   Widget _buildDateSelector() {
+    final now = DateTime.now();
+    final formattedDate = DateFormat('EEEE, d MMM', 'id_ID').format(now);
+    
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         _iconButton(Icons.chevron_left),
         Row(
           children: [
-            const Icon(Icons.calendar_today, color: NexusColors.accentCyan, size: 20),
+            const Icon(
+              Icons.calendar_today,
+              color: NexusColors.accentLavender,
+              size: 20,
+            ),
             const SizedBox(width: 8),
             Text(
-              'Rabu, 23 Apr',
+              formattedDate,
               style: GoogleFonts.inter(
                 fontSize: 24,
                 fontWeight: FontWeight.w600,
@@ -71,6 +131,55 @@ class DayView extends ConsumerWidget {
         _iconButton(Icons.chevron_right),
       ],
     );
+  }
+
+  Widget _buildWeeklyHeader() {
+    return Row(
+      children: [
+        const Icon(
+          Icons.view_week,
+          color: NexusColors.accentLavender,
+          size: 20,
+        ),
+        const SizedBox(width: 8),
+        Text(
+          'Weekly Overview',
+          style: GoogleFonts.inter(
+            fontSize: 24,
+            fontWeight: FontWeight.w600,
+            color: NexusColors.textPrimary,
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildCalendarPlaceholder() {
+    return Center(
+      child: Column(
+        children: [
+          const Icon(Icons.calendar_month, size: 64, color: NexusColors.textMuted),
+          const SizedBox(height: 16),
+          Text(
+            'Calendar View Coming Soon',
+            style: GoogleFonts.inter(color: NexusColors.textSecondary),
+          ),
+        ],
+      ),
+    );
+  }
+
+  String _getDayName(int day) {
+    switch (day) {
+      case 0: return 'Senin';
+      case 1: return 'Selasa';
+      case 2: return 'Rabu';
+      case 3: return 'Kamis';
+      case 4: return 'Jumat';
+      case 5: return 'Sabtu';
+      case 6: return 'Minggu';
+      default: return '';
+    }
   }
 
   Widget _iconButton(IconData icon) {
@@ -88,9 +197,12 @@ class DayView extends ConsumerWidget {
 
   Widget _buildScheduleCard(ScheduleItem item) {
     final isKampus = item.type == 'Kampus';
-    final accentColor = isKampus ? NexusColors.accentCyan : NexusColors.warning;
-    final startTime = DateFormat('HH:mm').format(item.startTime);
-    final duration = '${item.endTime.difference(item.startTime).inHours} Jam';
+    final accentColor = isKampus
+        ? NexusColors.accentLavender
+        : NexusColors.accentViolet;
+    final startTime = item.startTime;
+    final endTime = item.endTime ?? '';
+    final duration = endTime.isNotEmpty ? '$startTime - $endTime' : startTime;
 
     return Container(
       decoration: BoxDecoration(
@@ -114,14 +226,16 @@ class DayView extends ConsumerWidget {
                   BoxShadow(
                     color: accentColor.withValues(alpha: 0.5),
                     blurRadius: 8,
-                  )
+                  ),
                 ],
               ),
             ),
             Container(
               width: 70,
               decoration: const BoxDecoration(
-                border: Border(right: BorderSide(color: NexusColors.glassBorder)),
+                border: Border(
+                  right: BorderSide(color: NexusColors.glassBorder),
+                ),
               ),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -158,10 +272,15 @@ class DayView extends ConsumerWidget {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 8,
+                            vertical: 2,
+                          ),
                           decoration: BoxDecoration(
                             color: accentColor.withValues(alpha: 0.1),
-                            border: Border.all(color: accentColor.withValues(alpha: 0.2)),
+                            border: Border.all(
+                              color: accentColor.withValues(alpha: 0.2),
+                            ),
                             borderRadius: BorderRadius.circular(4),
                           ),
                           child: Text(
@@ -195,7 +314,11 @@ class DayView extends ConsumerWidget {
                       const SizedBox(height: 8),
                       Row(
                         children: [
-                          const Icon(Icons.location_on, size: 16, color: NexusColors.textSecondary),
+                          const Icon(
+                            Icons.location_on,
+                            size: 16,
+                            color: NexusColors.textSecondary,
+                          ),
                           const SizedBox(width: 6),
                           Text(
                             item.location!,

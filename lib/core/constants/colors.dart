@@ -2,15 +2,15 @@ import 'package:flutter/material.dart';
 
 class NexusColors {
   // Base
-  static const background = Color(0xFF030712);
-  static const surface    = Color(0xFF0D1117);
-  static const surfaceGlass = Color(0x0DFFFFFF);  // white/5
+  static const background = Color(0xFF0C091A); // Deep Navy/Purple
+  static const surface    = Color(0xFF16122C);
+  static const surfaceGlass = Color(0x1AFFFFFF);
 
   // Accent
-  static const accentBlue = Color(0xFF2563EB);
-  static const accentCyan = Color(0xFF22D3EE);
+  static const accentViolet   = Color(0xFF8B5CF6);
+  static const accentLavender = Color(0xFFA78BFA);
   static const accentGrad = LinearGradient(
-    colors: [accentBlue, accentCyan],
+    colors: [accentViolet, accentLavender],
     begin: Alignment.topLeft,
     end: Alignment.bottomRight,
   );

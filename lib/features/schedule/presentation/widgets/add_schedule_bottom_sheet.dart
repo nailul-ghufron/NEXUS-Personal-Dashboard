@@ -21,7 +21,8 @@ class _AddScheduleBottomSheetState extends ConsumerState<AddScheduleBottomSheet>
   final _locationController = TextEditingController();
   DateTime _startTime = DateTime.now();
   DateTime _endTime = DateTime.now().add(const Duration(hours: 1));
-  String _type = 'Kampus';
+  String _type = 'campus';
+  int _selectedDay = DateTime.now().weekday - 1; // 0=Mon, 6=Sun
 
   @override
   void dispose() {
@@ -62,8 +63,9 @@ class _AddScheduleBottomSheetState extends ConsumerState<AddScheduleBottomSheet>
       id: const Uuid().v4(),
       userId: user.id,
       title: _titleController.text.trim(),
-      startTime: _startTime,
-      endTime: _endTime,
+      dayOfWeek: _selectedDay,
+      startTime: DateFormat('HH:mm').format(_startTime),
+      endTime: DateFormat('HH:mm').format(_endTime),
       type: _type,
       location: _locationController.text.trim().isEmpty ? null : _locationController.text.trim(),
     );
@@ -110,6 +112,42 @@ class _AddScheduleBottomSheetState extends ConsumerState<AddScheduleBottomSheet>
             prefixIcon: const Icon(Icons.location_on, color: NexusColors.textSecondary),
           ),
           const SizedBox(height: 20),
+          Text(
+            'Hari',
+            style: GoogleFonts.inter(
+              fontSize: 14,
+              fontWeight: FontWeight.w600,
+              color: NexusColors.textSecondary,
+            ),
+          ),
+          const SizedBox(height: 12),
+          SingleChildScrollView(
+            scrollDirection: Axis.horizontal,
+            child: Row(
+              children: [
+                'Sen', 'Sel', 'Rab', 'Kam', 'Jum', 'Sab', 'Min'
+              ].asMap().entries.map((entry) {
+                final isSelected = _selectedDay == entry.key;
+                return Padding(
+                  padding: const EdgeInsets.only(right: 8),
+                  child: ChoiceChip(
+                    label: Text(entry.value),
+                    selected: isSelected,
+                    onSelected: (val) {
+                      if (val) setState(() => _selectedDay = entry.key);
+                    },
+                    backgroundColor: NexusColors.surfaceGlass,
+                    selectedColor: NexusColors.accentLavender.withValues(alpha: 0.2),
+                    labelStyle: GoogleFonts.inter(
+                      color: isSelected ? NexusColors.accentLavender : NexusColors.textSecondary,
+                      fontSize: 13,
+                    ),
+                  ),
+                );
+              }).toList(),
+            ),
+          ),
+          const SizedBox(height: 20),
           Row(
             children: [
               Expanded(
@@ -132,20 +170,24 @@ class _AddScheduleBottomSheetState extends ConsumerState<AddScheduleBottomSheet>
           ),
           const SizedBox(height: 12),
           Row(
-            children: ['Kampus', "Ma'had", 'Lainnya'].map((t) {
-              final isSelected = _type == t;
+            children: [
+              {'label': 'Kampus', 'value': 'campus'},
+              {'label': "Ma'had", 'value': 'mahad'},
+              {'label': 'Lainnya', 'value': 'other'},
+            ].map((t) {
+              final isSelected = _type == t['value'];
               return Padding(
                 padding: const EdgeInsets.only(right: 8),
                 child: ChoiceChip(
-                  label: Text(t),
+                  label: Text(t['label']!),
                   selected: isSelected,
                   onSelected: (val) {
-                    if (val) setState(() => _type = t);
+                    if (val) setState(() => _type = t['value']!);
                   },
                   backgroundColor: NexusColors.surfaceGlass,
-                  selectedColor: NexusColors.accentCyan.withValues(alpha: 0.2),
+                  selectedColor: NexusColors.accentLavender.withValues(alpha: 0.2),
                   labelStyle: GoogleFonts.inter(
-                    color: isSelected ? NexusColors.accentCyan : NexusColors.textSecondary,
+                    color: isSelected ? NexusColors.accentLavender : NexusColors.textSecondary,
                     fontSize: 13,
                   ),
                 ),
@@ -156,7 +198,7 @@ class _AddScheduleBottomSheetState extends ConsumerState<AddScheduleBottomSheet>
           ElevatedButton(
             onPressed: _submit,
             style: ElevatedButton.styleFrom(
-              backgroundColor: NexusColors.accentCyan,
+              backgroundColor: NexusColors.accentLavender,
               foregroundColor: Colors.black,
               padding: const EdgeInsets.symmetric(vertical: 16),
               shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
@@ -192,7 +234,7 @@ class _AddScheduleBottomSheetState extends ConsumerState<AddScheduleBottomSheet>
             ),
             child: Row(
               children: [
-                const Icon(Icons.access_time, size: 16, color: NexusColors.accentCyan),
+                const Icon(Icons.access_time, size: 16, color: NexusColors.accentLavender),
                 const SizedBox(width: 8),
                 Text(
                   DateFormat('HH:mm').format(time),

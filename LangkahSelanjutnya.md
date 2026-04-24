@@ -42,3 +42,24 @@ Tujuan: Memastikan kualitas premium dan performa.
 ---
 **Status Proyek:** Aplikasi NEXUS telah berhasil dimigrasikan ke Supabase dan memiliki fitur CRUD yang berfungsi penuh dengan desain premium.
 
+# Langkah Selanjutnya: Nexus Personal Dashboard 🚀
+
+... (Fase 1-5 ditandai Selesai ✅) ...
+
+## Fase 6: Deployment & Optimization 🛠️
+Tujuan: Menyiapkan aplikasi untuk penggunaan sehari-hari dan performa tinggi.
+
+1.  **Android APK Build**: Menjalankan `flutter build apk --split-per-abi` untuk menghasilkan file instalasi.
+2.  **App Icon & Splash Screen**: Selesai ✅ (Ikon futuristik dan splash screen dikonfigurasi).
+3.  **Error Monitoring**: Selesai ✅ (Integrasi Sentry Flutter di `main.dart` dan `router.dart`).
+4.  **Performance Audit**: Selesai ✅ (Tracing Sentry diaktifkan untuk memantau performa).
+
+## Fase 7: Fitur Lanjutan (Masa Depan) 🌌
+Tujuan: Menambah nilai unik dan kegunaan jangka panjang.
+
+1.  **Offline Persistence**: Selesai ✅ (Menggunakan `Hive` untuk caching data lokal).
+2.  **Push Notifications**: Selesai ✅ (Integrasi `flutter_local_notifications` untuk pengingat).
+3.  **Widgets (Android/iOS)**: Dalam Pengembangan 🚧 (Memerlukan implementasi kode native Android/iOS).
+4.  **AI Insight**: Selesai ✅ (Integrasi Gemini API untuk rangkuman catatan di `NotesScreen`).
+---
+**Status Terkini:** Aplikasi telah terhubung penuh ke Supabase Project `mnxhkxcojjhqkeyzsjtj`. Database schema dan seed data mahasiswa sudah aktif.

@@ -19,10 +19,10 @@ class MeshGradientBg extends StatelessWidget {
             height: 400,
             decoration: BoxDecoration(
               shape: BoxShape.circle,
-              color: NexusColors.accentCyan.withValues(alpha: 0.15),
+              color: NexusColors.accentLavender.withValues(alpha: 0.15),
               boxShadow: [
                 BoxShadow(
-                  color: NexusColors.accentCyan.withValues(alpha: 0.15),
+                  color: NexusColors.accentLavender.withValues(alpha: 0.15),
                   blurRadius: 100,
                   spreadRadius: 50,
                 )
@@ -39,10 +39,10 @@ class MeshGradientBg extends StatelessWidget {
             height: 500,
             decoration: BoxDecoration(
               shape: BoxShape.circle,
-              color: NexusColors.accentBlue.withValues(alpha: 0.20),
+              color: NexusColors.accentViolet.withValues(alpha: 0.20),
               boxShadow: [
                 BoxShadow(
-                  color: NexusColors.accentBlue.withValues(alpha: 0.20),
+                  color: NexusColors.accentViolet.withValues(alpha: 0.20),
                   blurRadius: 100,
                   spreadRadius: 50,
                 )
@@ -59,10 +59,10 @@ class MeshGradientBg extends StatelessWidget {
             height: 300,
             decoration: BoxDecoration(
               shape: BoxShape.circle,
-              color: const Color(0xFFFFD6A3).withValues(alpha: 0.10),
+              color: const Color(0xFFD946EF).withValues(alpha: 0.10), // Magenta/Fuchsia
               boxShadow: [
                 BoxShadow(
-                  color: const Color(0xFFFFD6A3).withValues(alpha: 0.10),
+                  color: const Color(0xFFD946EF).withValues(alpha: 0.10),
                   blurRadius: 100,
                   spreadRadius: 50,
                 )

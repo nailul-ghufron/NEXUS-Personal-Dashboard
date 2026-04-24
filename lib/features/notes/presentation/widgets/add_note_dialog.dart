@@ -131,7 +131,7 @@ class _AddNoteDialogState extends ConsumerState<AddNoteDialog> {
                   child: ElevatedButton(
                     onPressed: _submit,
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: NexusColors.accentCyan,
+                      backgroundColor: NexusColors.accentLavender,
                       foregroundColor: Colors.black,
                       padding: const EdgeInsets.symmetric(vertical: 16),
                       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),

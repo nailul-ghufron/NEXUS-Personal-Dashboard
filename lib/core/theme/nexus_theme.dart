@@ -6,8 +6,8 @@ ThemeData nexusTheme() => ThemeData(
   brightness: Brightness.dark,
   scaffoldBackgroundColor: NexusColors.background,
   colorScheme: const ColorScheme.dark(
-    primary: NexusColors.accentCyan,
-    secondary: NexusColors.accentBlue,
+    primary: NexusColors.accentLavender,
+    secondary: NexusColors.accentViolet,
     surface: NexusColors.surface,
     onPrimary: Colors.black,
     onSecondary: Colors.white,
