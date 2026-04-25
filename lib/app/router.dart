@@ -9,17 +9,22 @@ import '../shared/navigation/bottom_nav.dart';
 
 import 'package:sentry_flutter/sentry_flutter.dart';
 
-final router = GoRouter(
-  initialLocation: '/today',
-  observers: [SentryNavigatorObserver()],
-  redirect: (context, state) {
-    // Mocking Auth for layout building phase
-    const bool isLoggedIn = true;
-    final isLogin = state.matchedLocation == '/login';
-    if (!isLoggedIn && !isLogin) return '/login';
-    if (isLoggedIn && isLogin) return '/today';
-    return null;
-  },
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../features/auth/presentation/auth_providers.dart';
+
+final routerProvider = Provider<GoRouter>((ref) {
+  final authState = ref.watch(authStateProvider);
+
+  return GoRouter(
+    initialLocation: '/today',
+    observers: [SentryNavigatorObserver()],
+    redirect: (context, state) {
+      final isLoggedIn = authState.value?.session != null;
+      final isLogin = state.matchedLocation == '/login';
+      if (!isLoggedIn && !isLogin) return '/login';
+      if (isLoggedIn && isLogin) return '/today';
+      return null;
+    },
   routes: [
     GoRoute(path: '/login', builder: (_, __) => const LoginScreen()),
     ShellRoute(
@@ -34,3 +39,4 @@ final router = GoRouter(
     ),
   ],
 );
+});

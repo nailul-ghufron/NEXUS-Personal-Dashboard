@@ -2,11 +2,25 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../../../../core/constants/colors.dart';
 
-class GreetingHeader extends StatelessWidget {
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:intl/intl.dart';
+import '../../../auth/presentation/auth_providers.dart';
+
+class GreetingHeader extends ConsumerWidget {
   const GreetingHeader({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final hour = DateTime.now().hour;
+    final greeting = hour < 11 ? 'Pagi' : hour < 15 ? 'Siang' : hour < 18 ? 'Sore' : 'Malam';
+    
+    final user = ref.watch(currentUserProvider);
+    final name = user?.userMetadata?['full_name']?.toString().split(' ').first ?? 'Pengguna';
+    
+    final date = DateFormat('EEEE, d MMMM yyyy', 'id_ID')
+        .format(DateTime.now())
+        .toUpperCase();
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -16,7 +30,7 @@ class GreetingHeader extends StatelessWidget {
           children: [
             Expanded(
               child: Text(
-                'Selamat Pagi, Nailul',
+                'Selamat $greeting, $name',
                 style: GoogleFonts.inter(
                   fontSize: 32,
                   fontWeight: FontWeight.w700,
@@ -38,7 +52,7 @@ class GreetingHeader extends StatelessWidget {
         ),
         const SizedBox(height: 4),
         Text(
-          'RABU, 23 APRIL 2026',
+          date,
           style: GoogleFonts.inter(
             fontSize: 12,
             fontWeight: FontWeight.w600,

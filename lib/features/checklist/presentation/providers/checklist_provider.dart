@@ -8,16 +8,23 @@ part 'checklist_provider.g.dart';
 class Checklist extends _$Checklist {
   @override
   FutureOr<List<ChecklistItem>> build() async {
+    ref.keepAlive();
     return ref.watch(checklistRepositoryProvider).getChecklists();
   }
 
   Future<void> toggleItem(ChecklistItem item) async {
     final updatedItem = item.copyWith(isCompleted: !item.isCompleted);
-    state = const AsyncLoading();
-    state = await AsyncValue.guard(() async {
+    final previousItems = state.value ?? [];
+
+    state = AsyncData(
+      previousItems.map((i) => i.id == item.id ? updatedItem : i).toList(),
+    );
+
+    try {
       await ref.read(checklistRepositoryProvider).updateChecklist(updatedItem);
-      return ref.read(checklistRepositoryProvider).getChecklists();
-    });
+    } catch (e) {
+      state = AsyncData(previousItems);
+    }
   }
 
   Future<void> addItem(ChecklistItem item) async {

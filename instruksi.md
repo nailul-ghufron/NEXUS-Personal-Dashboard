@@ -1,1 +1,0 @@
-sebelum mengakhiri penulisan code pastikan untuk memastikan kode yang di hasilkan dapat di jalankan dengan perintah "flutter run" pada folder Nexus-Personal-Dashboard-2

@@ -8,6 +8,7 @@ part 'schedule_provider.g.dart';
 class Schedule extends _$Schedule {
   @override
   FutureOr<List<ScheduleItem>> build() async {
+    ref.keepAlive();
     return ref.watch(scheduleRepositoryProvider).getSchedules();
   }
 

@@ -4,7 +4,10 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 final geminiServiceProvider = Provider((ref) => GeminiService());
 
 class GeminiService {
-  static const _apiKey = 'AIzaSyBjnDh5LRHTMhRY1AtcpJ-a2jiqqZcV17Y';
+  static const _apiKey = String.fromEnvironment(
+    'GEMINI_API_KEY',
+    defaultValue: '',
+  );
   
   late final GenerativeModel _model;
 

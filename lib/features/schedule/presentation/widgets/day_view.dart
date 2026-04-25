@@ -28,6 +28,8 @@ class DayView extends ConsumerWidget {
             if (currentFilter == 0) {
               // Today's filter (0=Mon in DB, DateTime.now().weekday is 1=Mon)
               final today = (DateTime.now().weekday - 1);
+              debugPrint('Today weekday index (DB format): $today');
+              debugPrint('Expected schedules count: ${items.where((i) => i.dayOfWeek == today).length}');
               filteredItems = items.where((item) => item.dayOfWeek == today).toList();
               // Sort by start time
               filteredItems.sort((a, b) => a.startTime.compareTo(b.startTime));
@@ -196,7 +198,7 @@ class DayView extends ConsumerWidget {
   }
 
   Widget _buildScheduleCard(ScheduleItem item) {
-    final isKampus = item.type == 'Kampus';
+    final isKampus = item.type == 'campus';
     final accentColor = isKampus
         ? NexusColors.accentLavender
         : NexusColors.accentViolet;

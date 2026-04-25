@@ -8,6 +8,7 @@ part 'notes_provider.g.dart';
 class Notes extends _$Notes {
   @override
   FutureOr<List<Note>> build() async {
+    ref.keepAlive();
     return ref.watch(notesRepositoryProvider).getNotes();
   }
 

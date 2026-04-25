@@ -22,7 +22,7 @@ Future<void> main() async {
 
   await Supabase.initialize(
     url: 'https://mnxhkxcojjhqkeyzsjtj.supabase.co',
-    anonKey: 'sb_publishable_7W6rgoLKTu5Q0qoTd8NH-A_givh9Bxb',
+    anonKey: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1ueGhreGNvampocWtleXpzanRqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzY5NDcwMzUsImV4cCI6MjA5MjUyMzAzNX0.Y8UTTGSXbLQGOpP5urA5cVCFFRZsTb-pulbLVP1uKyM',
   );
 
   await initializeDateFormatting('id_ID', null);
@@ -37,11 +37,13 @@ Future<void> main() async {
   );
 }
 
-class NexusApp extends StatelessWidget {
+class NexusApp extends ConsumerWidget {
   const NexusApp({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final router = ref.watch(routerProvider);
+    
     return MaterialApp.router(
       title: 'Nexus Dashboard',
       theme: nexusTheme(),
