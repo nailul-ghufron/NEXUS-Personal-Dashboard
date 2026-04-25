@@ -25,18 +25,21 @@ final routerProvider = Provider<GoRouter>((ref) {
       if (isLoggedIn && isLogin) return '/today';
       return null;
     },
-  routes: [
-    GoRoute(path: '/login', builder: (_, __) => const LoginScreen()),
-    ShellRoute(
-      builder: (context, state, child) => MainShell(child: child),
-      routes: [
-        GoRoute(path: '/today', builder: (_, __) => const TodayScreen()),
-        GoRoute(path: '/schedule', builder: (_, __) => const ScheduleScreen()),
-        GoRoute(path: '/checklist', builder: (_, __) => const ChecklistScreen()),
-        GoRoute(path: '/notes', builder: (_, __) => const NotesScreen()),
-        GoRoute(path: '/pomodoro', builder: (_, __) => const PomodoroScreen()),
-      ],
-    ),
-  ],
-);
+    routes: [
+      GoRoute(path: '/login', builder: (_, _) => const LoginScreen()),
+      ShellRoute(
+        builder: (context, state, child) => MainShell(child: child),
+        routes: [
+          GoRoute(path: '/today', builder: (_, _) => const TodayScreen()),
+          GoRoute(path: '/schedule', builder: (_, _) => const ScheduleScreen()),
+          GoRoute(
+            path: '/checklist',
+            builder: (_, _) => const ChecklistScreen(),
+          ),
+          GoRoute(path: '/notes', builder: (_, _) => const NotesScreen()),
+          GoRoute(path: '/pomodoro', builder: (_, _) => const PomodoroScreen()),
+        ],
+      ),
+    ],
+  );
 });
