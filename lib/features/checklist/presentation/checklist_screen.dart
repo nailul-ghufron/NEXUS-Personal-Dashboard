@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
+import 'package:intl/intl.dart';
 import '../../../core/constants/colors.dart';
 import '../../../app/providers/ui_providers.dart';
 import 'providers/checklist_provider.dart';
@@ -69,7 +70,7 @@ class ChecklistScreen extends ConsumerWidget {
                         padding: const EdgeInsets.fromLTRB(20, 24, 20, 100),
                         child: Column(
                           children: [
-                            _buildDateNavigator(),
+                            _buildDateNavigator(ref),
                             const SizedBox(height: 32),
                             ProgressRing(completed: completedCount, total: totalCount),
                             const SizedBox(height: 32),
@@ -129,13 +130,19 @@ class ChecklistScreen extends ConsumerWidget {
     );
   }
 
-  Widget _buildDateNavigator() {
+  Widget _buildDateNavigator(WidgetRef ref) {
+    final selectedDate = ref.watch(checklistSelectedDateProvider);
+    final formattedDate = DateFormat('EEEE, d MMM', 'id_ID').format(selectedDate);
+
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        _iconButton(LucideIcons.chevronLeft),
+        _iconButton(
+          LucideIcons.chevronLeft,
+          onTap: () => ref.read(checklistSelectedDateProvider.notifier).previousDay(),
+        ),
         Text(
-          'Rabu, 23 Apr',
+          formattedDate,
           style: GoogleFonts.inter(
             fontSize: 20,
             fontWeight: FontWeight.w600,
@@ -143,21 +150,27 @@ class ChecklistScreen extends ConsumerWidget {
             letterSpacing: 0.5,
           ),
         ),
-        _iconButton(LucideIcons.chevronRight),
+        _iconButton(
+          LucideIcons.chevronRight,
+          onTap: () => ref.read(checklistSelectedDateProvider.notifier).nextDay(),
+        ),
       ],
     );
   }
 
-  Widget _iconButton(IconData icon) {
-    return Container(
-      width: 40,
-      height: 40,
-      decoration: BoxDecoration(
-        color: NexusColors.surfaceGlass,
-        shape: BoxShape.circle,
-        border: Border.all(color: NexusColors.glassBorder),
+  Widget _iconButton(IconData icon, {VoidCallback? onTap}) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        width: 40,
+        height: 40,
+        decoration: BoxDecoration(
+          color: NexusColors.surfaceGlass,
+          shape: BoxShape.circle,
+          border: Border.all(color: NexusColors.glassBorder),
+        ),
+        child: Icon(icon, color: NexusColors.textSecondary),
       ),
-      child: Icon(icon, color: NexusColors.textSecondary),
     );
   }
 
@@ -230,6 +243,9 @@ class ChecklistScreen extends ConsumerWidget {
               isCompleted: item.isCompleted,
               onTap: () {
                 ref.read(checklistProvider.notifier).toggleItem(item);
+              },
+              onDelete: () {
+                ref.read(checklistProvider.notifier).removeItem(item.id);
               },
             ),
           ),

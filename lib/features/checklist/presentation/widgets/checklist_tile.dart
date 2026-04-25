@@ -7,6 +7,7 @@ class ChecklistTile extends StatelessWidget {
   final String? subtitle;
   final bool isCompleted;
   final VoidCallback? onTap;
+  final VoidCallback? onDelete;
 
   const ChecklistTile({
     super.key,
@@ -14,6 +15,7 @@ class ChecklistTile extends StatelessWidget {
     this.subtitle,
     this.isCompleted = false,
     this.onTap,
+    this.onDelete,
   });
 
   @override
@@ -60,6 +62,17 @@ class ChecklistTile extends StatelessWidget {
                 ],
               ),
             ),
+            if (onDelete != null) ...[
+              const SizedBox(width: 8),
+              GestureDetector(
+                onTap: onDelete,
+                child: Icon(
+                  Icons.delete_outline,
+                  color: Colors.red.withValues(alpha: 0.7),
+                  size: 20,
+                ),
+              ),
+            ],
           ],
         ),
       ),

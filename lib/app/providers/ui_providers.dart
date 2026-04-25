@@ -44,3 +44,15 @@ class CalendarSelectedDateNotifier extends Notifier<DateTime> {
 final calendarSelectedDateProvider = NotifierProvider<CalendarSelectedDateNotifier, DateTime>(() {
   return CalendarSelectedDateNotifier();
 });
+
+class ChecklistSelectedDateNotifier extends Notifier<DateTime> {
+  @override
+  DateTime build() => DateTime.now();
+  void setDate(DateTime date) => state = date;
+  void nextDay() => state = state.add(const Duration(days: 1));
+  void previousDay() => state = state.subtract(const Duration(days: 1));
+}
+
+final checklistSelectedDateProvider = NotifierProvider<ChecklistSelectedDateNotifier, DateTime>(() {
+  return ChecklistSelectedDateNotifier();
+});
