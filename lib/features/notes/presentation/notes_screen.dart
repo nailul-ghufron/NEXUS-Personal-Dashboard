@@ -5,6 +5,7 @@ import '../../../core/constants/colors.dart';
 import '../../../core/widgets/glass_input.dart';
 import 'providers/notes_provider.dart';
 import 'widgets/note_card.dart';
+import 'widgets/add_note_dialog.dart';
 import '../../ai_insight/data/gemini_service.dart';
 import '../../../core/widgets/glass_card.dart';
 
@@ -231,7 +232,12 @@ class _NotesScreenState extends ConsumerState<NotesScreen> {
     final rightCol = <Widget>[];
 
     for (var i = 0; i < notes.length; i++) {
-      final card = NoteCard(note: notes[i]);
+      final note = notes[i];
+      final card = NoteCard(
+        note: note,
+        onTap: () => _showEditNote(context, note),
+        onDelete: () => _confirmDelete(context, note.id),
+      );
       if (i % 2 == 0) {
         leftCol.add(card);
       } else {
@@ -250,6 +256,38 @@ class _NotesScreenState extends ConsumerState<NotesScreen> {
           child: Column(children: rightCol),
         ),
       ],
+    );
+  }
+
+  void _showEditNote(BuildContext context, dynamic note) {
+    showDialog(
+      context: context,
+      builder: (context) => AddNoteDialog(note: note),
+    );
+  }
+
+  void _confirmDelete(BuildContext context, String id) {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        backgroundColor: NexusColors.background,
+        title: Text('Delete Note?', style: GoogleFonts.inter(color: Colors.white)),
+        content: Text('This action cannot be undone.', style: GoogleFonts.inter(color: NexusColors.textSecondary)),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: Text('Cancel', style: GoogleFonts.inter(color: NexusColors.textSecondary)),
+          ),
+          ElevatedButton(
+            onPressed: () {
+              ref.read(notesProvider.notifier).removeNote(id);
+              Navigator.pop(context);
+            },
+            style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
+            child: const Text('Delete'),
+          ),
+        ],
+      ),
     );
   }
 }

@@ -5,6 +5,7 @@ import '../../../../core/constants/colors.dart';
 import '../../../../app/providers/ui_providers.dart';
 import '../providers/schedule_provider.dart';
 import '../../domain/models/schedule_item.dart';
+import 'calendar_view.dart';
 import 'package:intl/intl.dart';
 
 class DayView extends ConsumerWidget {
@@ -19,7 +20,7 @@ class DayView extends ConsumerWidget {
       children: [
         if (currentFilter == 0) _buildDateSelector(),
         if (currentFilter == 1) _buildWeeklyHeader(),
-        if (currentFilter == 2) _buildCalendarPlaceholder(),
+        if (currentFilter == 2) const CalendarView(),
         const SizedBox(height: 16),
         scheduleAsync.when(
           data: (items) {
@@ -156,20 +157,6 @@ class DayView extends ConsumerWidget {
     );
   }
 
-  Widget _buildCalendarPlaceholder() {
-    return Center(
-      child: Column(
-        children: [
-          const Icon(Icons.calendar_month, size: 64, color: NexusColors.textMuted),
-          const SizedBox(height: 16),
-          Text(
-            'Calendar View Coming Soon',
-            style: GoogleFonts.inter(color: NexusColors.textSecondary),
-          ),
-        ],
-      ),
-    );
-  }
 
   String _getDayName(int day) {
     switch (day) {

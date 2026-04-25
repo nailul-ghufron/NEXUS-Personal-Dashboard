@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:audioplayers/audioplayers.dart';
 
 enum PomodoroMode {
   work,
@@ -59,11 +60,14 @@ class PomodoroState {
 
 class PomodoroNotifier extends Notifier<PomodoroState> {
   Timer? _timer;
+  late final AudioPlayer _audioPlayer;
 
   @override
   PomodoroState build() {
+    _audioPlayer = AudioPlayer();
     ref.onDispose(() {
       _timer?.cancel();
+      _audioPlayer.dispose();
     });
     return PomodoroState();
   }
@@ -107,15 +111,36 @@ class PomodoroNotifier extends Notifier<PomodoroState> {
   }
 
   void _handleSessionComplete() {
+    _playAlarm();
     if (state.mode == PomodoroMode.work) {
       final newSessions = state.completedSessions + 1;
       state = state.copyWith(
         isRunning: false,
         completedSessions: newSessions,
       );
-      // Auto-switch to break? User might prefer manual.
     } else {
       state = state.copyWith(isRunning: false);
+    }
+  }
+
+  Future<void> _playAlarm() async {
+    String assetPath;
+    switch (state.mode) {
+      case PomodoroMode.work:
+        assetPath = 'Sound_Alarm/soundreality-alarm-471496.mp3';
+        break;
+      case PomodoroMode.shortBreak:
+        assetPath = 'Sound_Alarm/soundsgoodmusic-alarm-2-375697.mp3';
+        break;
+      case PomodoroMode.longBreak:
+        assetPath = 'Sound_Alarm/u_inx5oo5fv3-alarm-327234.mp3';
+        break;
+    }
+    
+    try {
+      await _audioPlayer.play(AssetSource(assetPath));
+    } catch (e) {
+      // Log error if needed
     }
   }
 

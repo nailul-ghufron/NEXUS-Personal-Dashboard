@@ -9,11 +9,13 @@ enum NoteTint { neutral, ocean, aurora, dusk, forest }
 class NoteCard extends StatelessWidget {
   final Note note;
   final VoidCallback? onTap;
+  final VoidCallback? onDelete;
 
   const NoteCard({
     super.key,
     required this.note,
     this.onTap,
+    this.onDelete,
   });
 
   @override
@@ -66,13 +68,30 @@ class NoteCard extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
-              note.title,
-              style: GoogleFonts.inter(
-                fontSize: 16,
-                fontWeight: FontWeight.w600,
-                color: NexusColors.textPrimary,
-              ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Expanded(
+                  child: Text(
+                    note.title,
+                    style: GoogleFonts.inter(
+                      fontSize: 16,
+                      fontWeight: FontWeight.w600,
+                      color: NexusColors.textPrimary,
+                    ),
+                  ),
+                ),
+                if (onDelete != null)
+                  GestureDetector(
+                    onTap: onDelete,
+                    child: Icon(
+                      Icons.close,
+                      size: 18,
+                      color: NexusColors.textMuted.withValues(alpha: 0.5),
+                    ),
+                  ),
+              ],
             ),
             const SizedBox(height: 8),
             if (note.content != null)

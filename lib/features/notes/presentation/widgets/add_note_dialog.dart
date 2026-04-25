@@ -9,7 +9,8 @@ import '../../domain/models/note.dart';
 import '../providers/notes_provider.dart';
 
 class AddNoteDialog extends ConsumerStatefulWidget {
-  const AddNoteDialog({super.key});
+  final Note? note;
+  const AddNoteDialog({super.key, this.note});
 
   @override
   ConsumerState<AddNoteDialog> createState() => _AddNoteDialogState();
@@ -19,6 +20,16 @@ class _AddNoteDialogState extends ConsumerState<AddNoteDialog> {
   final _titleController = TextEditingController();
   final _contentController = TextEditingController();
   String _tint = 'neutral';
+
+  @override
+  void initState() {
+    super.initState();
+    if (widget.note != null) {
+      _titleController.text = widget.note!.title;
+      _contentController.text = widget.note!.content ?? '';
+      _tint = widget.note!.tint;
+    }
+  }
 
   @override
   void dispose() {
@@ -33,17 +44,25 @@ class _AddNoteDialogState extends ConsumerState<AddNoteDialog> {
     final user = ref.read(currentUserProvider);
     if (user == null) return;
 
-    final newNote = Note(
-      id: const Uuid().v4(),
-      userId: user.id,
-      title: _titleController.text.trim(),
-      content: _contentController.text.trim(),
-      tint: _tint,
-      lastModified: DateTime.now(),
-      createdAt: DateTime.now(),
-    );
-
-    ref.read(notesProvider.notifier).addNote(newNote);
+    if (widget.note != null) {
+      final updatedNote = widget.note!.copyWith(
+        title: _titleController.text.trim(),
+        content: _contentController.text.trim(),
+        tint: _tint,
+      );
+      ref.read(notesProvider.notifier).updateNote(updatedNote);
+    } else {
+      final newNote = Note(
+        id: const Uuid().v4(),
+        userId: user.id,
+        title: _titleController.text.trim(),
+        content: _contentController.text.trim(),
+        tint: _tint,
+        lastModified: DateTime.now(),
+        createdAt: DateTime.now(),
+      );
+      ref.read(notesProvider.notifier).addNote(newNote);
+    }
     Navigator.pop(context);
   }
 
@@ -64,7 +83,7 @@ class _AddNoteDialogState extends ConsumerState<AddNoteDialog> {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             Text(
-              'New Note',
+              widget.note != null ? 'Edit Note' : 'New Note',
               style: GoogleFonts.inter(
                 fontSize: 24,
                 fontWeight: FontWeight.w700,

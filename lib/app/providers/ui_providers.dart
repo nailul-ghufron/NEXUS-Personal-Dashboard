@@ -34,3 +34,13 @@ class ScheduleFilterNotifier extends Notifier<int> {
 final scheduleFilterProvider = NotifierProvider<ScheduleFilterNotifier, int>(() {
   return ScheduleFilterNotifier();
 });
+
+class CalendarSelectedDateNotifier extends Notifier<DateTime> {
+  @override
+  DateTime build() => DateTime.now();
+  void setDate(DateTime date) => state = date;
+}
+
+final calendarSelectedDateProvider = NotifierProvider<CalendarSelectedDateNotifier, DateTime>(() {
+  return CalendarSelectedDateNotifier();
+});
