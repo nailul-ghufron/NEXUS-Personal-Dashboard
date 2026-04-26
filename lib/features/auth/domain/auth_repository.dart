@@ -5,4 +5,5 @@ abstract class AuthRepository {
   User? get currentUser;
   Future<AuthResponse> signIn({required String email, required String password});
   Future<void> signOut();
+  Future<void> updateAvatar(String filePath);
 }

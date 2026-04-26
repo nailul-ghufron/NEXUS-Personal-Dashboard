@@ -3,9 +3,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../../../core/constants/colors.dart';
 import '../../../core/widgets/glass_input.dart';
+import 'package:go_router/go_router.dart';
 import 'providers/notes_provider.dart';
 import 'widgets/note_card.dart';
-import 'widgets/add_note_dialog.dart';
 import '../../ai_insight/data/gemini_service.dart';
 import '../../../core/widgets/glass_card.dart';
 
@@ -260,10 +260,7 @@ class _NotesScreenState extends ConsumerState<NotesScreen> {
   }
 
   void _showEditNote(BuildContext context, dynamic note) {
-    showDialog(
-      context: context,
-      builder: (context) => AddNoteDialog(note: note),
-    );
+    context.push('/note-editor', extra: note);
   }
 
   void _confirmDelete(BuildContext context, String id) {

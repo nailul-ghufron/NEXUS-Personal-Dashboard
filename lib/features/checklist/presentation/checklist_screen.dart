@@ -3,8 +3,11 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:intl/intl.dart';
+import 'package:go_router/go_router.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import '../../../core/constants/colors.dart';
 import '../../../app/providers/ui_providers.dart';
+import '../../auth/presentation/auth_providers.dart';
 import 'providers/checklist_provider.dart';
 import 'widgets/progress_ring.dart';
 import 'widgets/checklist_tile.dart';
@@ -15,6 +18,18 @@ class ChecklistScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final checklistAsync = ref.watch(checklistProvider);
+    
+    // Listen to real-time date changes (every minute)
+    ref.listen(realtimeDateProvider, (previous, next) {
+      if (next.hasValue && previous != null && previous.hasValue && 
+          previous.value?.day != next.value?.day) {
+        // Date has changed! (It's midnight)
+        // Reset daily tasks
+        ref.read(checklistProvider.notifier).resetDailyTasks();
+        // Update the selected date display
+        ref.read(checklistSelectedDateProvider.notifier).setDate(next.value!);
+      }
+    });
 
     return Scaffold(
       backgroundColor: NexusColors.background,
@@ -56,7 +71,7 @@ class ChecklistScreen extends ConsumerWidget {
             Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                _buildHeader(),
+                _buildHeader(context, ref),
                 Expanded(
                   child: checklistAsync.when(
                     data: (items) {
@@ -66,16 +81,22 @@ class ChecklistScreen extends ConsumerWidget {
                       final completedCount = filteredItems.where((i) => i.isCompleted).length;
                       final totalCount = filteredItems.length;
 
-                      return SingleChildScrollView(
+                      return Padding(
                         padding: const EdgeInsets.fromLTRB(20, 24, 20, 100),
-                        child: Column(
-                          children: [
-                            _buildDateNavigator(ref),
-                            const SizedBox(height: 32),
-                            ProgressRing(completed: completedCount, total: totalCount),
-                            const SizedBox(height: 32),
-                            _buildTabs(ref),
-                            const SizedBox(height: 24),
+                        child: CustomScrollView(
+                          slivers: [
+                            SliverToBoxAdapter(
+                              child: Column(
+                                children: [
+                                  _buildDateNavigator(ref),
+                                  const SizedBox(height: 32),
+                                  ProgressRing(completed: completedCount, total: totalCount),
+                                  const SizedBox(height: 32),
+                                  _buildTabs(ref),
+                                  const SizedBox(height: 24),
+                                ],
+                              ),
+                            ),
                             _buildChecklist(ref, filteredItems),
                           ],
                         ),
@@ -93,20 +114,35 @@ class ChecklistScreen extends ConsumerWidget {
     );
   }
 
-  Widget _buildHeader() {
+  Widget _buildHeader(BuildContext context, WidgetRef ref) {
+    final user = ref.watch(currentUserProvider);
+    final avatarUrl = user?.userMetadata?['avatar_url'];
+
     return Padding(
       padding: const EdgeInsets.fromLTRB(20, 16, 20, 0),
       child: Row(
         children: [
-          Container(
-            width: 32,
-            height: 32,
-            decoration: BoxDecoration(
-              shape: BoxShape.circle,
-              color: NexusColors.surfaceGlass,
-              border: Border.all(color: NexusColors.glassBorder),
+          GestureDetector(
+            onTap: () => context.push('/profile'),
+            child: Container(
+              width: 32,
+              height: 32,
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                color: NexusColors.surfaceGlass,
+                border: Border.all(color: NexusColors.glassBorder),
+              ),
+              child: ClipOval(
+                child: avatarUrl != null
+                    ? CachedNetworkImage(
+                        imageUrl: avatarUrl,
+                        fit: BoxFit.cover,
+                        placeholder: (context, url) => const CircularProgressIndicator(strokeWidth: 2),
+                        errorWidget: (context, url, error) => const Icon(LucideIcons.user, size: 20, color: NexusColors.textSecondary),
+                      )
+                    : const Icon(LucideIcons.user, size: 20, color: NexusColors.textSecondary),
+              ),
             ),
-            child: Icon(LucideIcons.user, size: 20, color: NexusColors.textSecondary),
           ),
           const Expanded(
             child: Center(
@@ -132,7 +168,14 @@ class ChecklistScreen extends ConsumerWidget {
 
   Widget _buildDateNavigator(WidgetRef ref) {
     final selectedDate = ref.watch(checklistSelectedDateProvider);
-    final formattedDate = DateFormat('EEEE, d MMM', 'id_ID').format(selectedDate);
+    final now = DateTime.now();
+    final isToday = selectedDate.day == now.day && 
+                    selectedDate.month == now.month && 
+                    selectedDate.year == now.year;
+    
+    final formattedDate = isToday 
+        ? 'Hari Ini, ${DateFormat('d MMM', 'id_ID').format(selectedDate)}'
+        : DateFormat('EEEE, d MMM', 'id_ID').format(selectedDate);
 
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -220,19 +263,23 @@ class ChecklistScreen extends ConsumerWidget {
 
   Widget _buildChecklist(WidgetRef ref, List items) {
     if (items.isEmpty) {
-      return Center(
-        child: Padding(
-          padding: const EdgeInsets.only(top: 40),
-          child: Text(
-            'No tasks found for today.',
-            style: GoogleFonts.inter(color: NexusColors.textSecondary),
+      return SliverToBoxAdapter(
+        child: Center(
+          child: Padding(
+            padding: const EdgeInsets.only(top: 40),
+            child: Text(
+              'No tasks found for today.',
+              style: GoogleFonts.inter(color: NexusColors.textSecondary),
+            ),
           ),
         ),
       );
     }
 
-    return Column(
-      children: items.map((item) {
+    return SliverList.builder(
+      itemCount: items.length,
+      itemBuilder: (context, index) {
+        final item = items[index];
         return Padding(
           padding: const EdgeInsets.only(bottom: 8),
           child: Opacity(
@@ -250,7 +297,7 @@ class ChecklistScreen extends ConsumerWidget {
             ),
           ),
         );
-      }).toList(),
+      },
     );
   }
 }

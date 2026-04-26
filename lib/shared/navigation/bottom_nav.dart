@@ -6,18 +6,35 @@ import '../../core/constants/colors.dart';
 import '../../core/widgets/glass_card.dart';
 import '../../features/schedule/presentation/widgets/add_schedule_bottom_sheet.dart';
 import '../../features/checklist/presentation/widgets/add_checklist_bottom_sheet.dart';
-import '../../features/notes/presentation/widgets/add_note_dialog.dart';
 import '../../features/pomodoro/presentation/pomodoro_widget.dart';
 import '../../app/providers/ui_providers.dart';
 
-class MainShell extends ConsumerWidget {
+class MainShell extends ConsumerStatefulWidget {
   final Widget child;
 
   const MainShell({super.key, required this.child});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<MainShell> createState() => _MainShellState();
+}
+
+class _MainShellState extends ConsumerState<MainShell> {
+  String? _lastLocation;
+
+  @override
+  Widget build(BuildContext context) {
     final location = GoRouterState.of(context).matchedLocation;
+
+    // Auto-show FAB on page change
+    if (_lastLocation != location) {
+      _lastLocation = location;
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (mounted) {
+          ref.read(fabVisibilityProvider.notifier).show();
+        }
+      });
+    }
+
     final isPomodoro = location == '/pomodoro';
     final isFabVisible = ref.watch(fabVisibilityProvider) && !isPomodoro;
 
@@ -33,7 +50,7 @@ class MainShell extends ConsumerWidget {
           }
           return false;
         },
-        child: child,
+        child: widget.child,
       ),
       extendBody: true,
       floatingActionButton: Padding(
@@ -52,10 +69,7 @@ class MainShell extends ConsumerWidget {
                 } else if (location == '/checklist') {
                   _showAddSheet(context, const AddChecklistBottomSheet());
                 } else if (location == '/notes') {
-                  showDialog(
-                    context: context,
-                    builder: (context) => const AddNoteDialog(),
-                  );
+                  context.push('/note-editor');
                 } else if (location == '/today') {
                   _showAddSheet(context, const AddChecklistBottomSheet());
                 }
@@ -128,6 +142,7 @@ class MainShell extends ConsumerWidget {
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
+      useRootNavigator: true,
       backgroundColor: Colors.transparent,
       builder: (context) => sheet,
     );

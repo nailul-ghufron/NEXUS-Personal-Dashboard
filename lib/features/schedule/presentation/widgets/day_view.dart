@@ -6,6 +6,7 @@ import '../../../../app/providers/ui_providers.dart';
 import '../providers/schedule_provider.dart';
 import '../../domain/models/schedule_item.dart';
 import 'calendar_view.dart';
+import 'add_schedule_bottom_sheet.dart';
 import 'package:intl/intl.dart';
 
 class DayView extends ConsumerWidget {
@@ -16,12 +17,12 @@ class DayView extends ConsumerWidget {
     final scheduleAsync = ref.watch(scheduleProvider);
     final currentFilter = ref.watch(scheduleFilterProvider);
 
-    return Column(
-      children: [
-        if (currentFilter == 0) _buildDateSelector(),
-        if (currentFilter == 1) _buildWeeklyHeader(),
-        if (currentFilter == 2) const CalendarView(),
-        const SizedBox(height: 16),
+    return CustomScrollView(
+      slivers: [
+        if (currentFilter == 0) SliverToBoxAdapter(child: _buildDateSelector()),
+        if (currentFilter == 1) SliverToBoxAdapter(child: _buildWeeklyHeader()),
+        if (currentFilter == 2) const SliverToBoxAdapter(child: CalendarView()),
+        const SliverToBoxAdapter(child: SizedBox(height: 16)),
         scheduleAsync.when(
           data: (items) {
             List<ScheduleItem> filteredItems = items;
@@ -46,30 +47,30 @@ class DayView extends ConsumerWidget {
             }
 
             if (filteredItems.isEmpty) {
-              return Center(
-                child: Padding(
-                  padding: const EdgeInsets.only(top: 40),
-                  child: Text(
-                    currentFilter == 0 ? 'No schedule for today.' : 'No schedules found.',
-                    style: GoogleFonts.inter(color: NexusColors.textSecondary),
+              return SliverToBoxAdapter(
+                child: Center(
+                  child: Padding(
+                    padding: const EdgeInsets.only(top: 40),
+                    child: Text(
+                      currentFilter == 0 ? 'No schedule for today.' : 'No schedules found.',
+                      style: GoogleFonts.inter(color: NexusColors.textSecondary),
+                    ),
                   ),
                 ),
               );
             }
 
-            return ListView.separated(
-              shrinkWrap: true,
-              physics: const NeverScrollableScrollPhysics(),
+            return SliverList.builder(
               itemCount: filteredItems.length,
-              separatorBuilder: (context, index) => const SizedBox(height: 16),
               itemBuilder: (context, index) {
                 final item = filteredItems[index];
-                // Show day header if weekly view and day changed
                 bool showDayHeader = currentFilter == 1 && 
                   (index == 0 || filteredItems[index-1].dayOfWeek != item.dayOfWeek);
                 
+                Widget card = _buildInteractiveScheduleCard(context, ref, item);
+                
                 if (showDayHeader) {
-                  return Column(
+                  card = Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Padding(
@@ -83,21 +84,30 @@ class DayView extends ConsumerWidget {
                           ),
                         ),
                       ),
-                      _buildScheduleCard(item),
+                      card,
                     ],
                   );
                 }
-                return _buildScheduleCard(item);
+
+                // Add separator logic directly in builder
+                return Padding(
+                  padding: EdgeInsets.only(bottom: index == filteredItems.length - 1 ? 0 : 16.0),
+                  child: card,
+                );
               },
             );
           },
-          loading: () => const Center(
-            child: CircularProgressIndicator(color: NexusColors.accentLavender),
+          loading: () => const SliverToBoxAdapter(
+            child: Center(
+              child: CircularProgressIndicator(color: NexusColors.accentLavender),
+            ),
           ),
-          error: (e, _) => Center(
-            child: Text(
-              'Error: $e',
-              style: const TextStyle(color: Colors.white),
+          error: (e, _) => SliverToBoxAdapter(
+            child: Center(
+              child: Text(
+                'Error: $e',
+                style: const TextStyle(color: Colors.white),
+              ),
             ),
           ),
         ),
@@ -184,7 +194,47 @@ class DayView extends ConsumerWidget {
     );
   }
 
-  Widget _buildScheduleCard(ScheduleItem item) {
+  Widget _buildInteractiveScheduleCard(BuildContext context, WidgetRef ref, ScheduleItem item) {
+    return _buildScheduleCard(context, ref, item);
+  }
+
+  void _showEditSheet(BuildContext context, ScheduleItem item) {
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      useRootNavigator: true,
+      backgroundColor: Colors.transparent,
+      builder: (context) => AddScheduleBottomSheet(item: item),
+    );
+  }
+
+  void _showDeleteConfirmation(BuildContext context, WidgetRef ref, ScheduleItem item) {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        backgroundColor: NexusColors.background,
+        title: Text('Delete Schedule?', style: GoogleFonts.inter(color: Colors.white)),
+        content: Text('Are you sure you want to delete "${item.title}"?', 
+          style: GoogleFonts.inter(color: NexusColors.textSecondary)),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: Text('Cancel', style: GoogleFonts.inter(color: NexusColors.textSecondary)),
+          ),
+          ElevatedButton(
+            onPressed: () {
+              ref.read(scheduleProvider.notifier).removeSchedule(item.id);
+              Navigator.pop(context);
+            },
+            style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
+            child: const Text('Delete'),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildScheduleCard(BuildContext context, WidgetRef ref, ScheduleItem item) {
     final isKampus = item.type == 'campus';
     final accentColor = isKampus
         ? NexusColors.accentLavender
@@ -319,12 +369,44 @@ class DayView extends ConsumerWidget {
                         ],
                       ),
                     ],
+                    const SizedBox(height: 12),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        _buildActionIcon(
+                          Icons.edit_outlined,
+                          NexusColors.accentLavender,
+                          () => _showEditSheet(context, item),
+                        ),
+                        const SizedBox(width: 12),
+                        _buildActionIcon(
+                          Icons.delete_outline,
+                          Colors.red.withValues(alpha: 0.7),
+                          () => _showDeleteConfirmation(context, ref, item),
+                        ),
+                      ],
+                    ),
                   ],
                 ),
               ),
             ),
           ],
         ),
+      ),
+    );
+  }
+
+  Widget _buildActionIcon(IconData icon, Color color, VoidCallback onTap) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        padding: const EdgeInsets.all(6),
+        decoration: BoxDecoration(
+          color: color.withValues(alpha: 0.1),
+          borderRadius: BorderRadius.circular(8),
+          border: Border.all(color: color.withValues(alpha: 0.2)),
+        ),
+        child: Icon(icon, size: 18, color: color),
       ),
     );
   }

@@ -4,6 +4,9 @@ import '../features/today/presentation/today_screen.dart';
 import '../features/schedule/presentation/schedule_screen.dart';
 import '../features/checklist/presentation/checklist_screen.dart';
 import '../features/notes/presentation/notes_screen.dart';
+import '../features/notes/presentation/note_editor_screen.dart';
+import '../features/notes/domain/models/note.dart';
+import '../features/profile/presentation/profile_screen.dart';
 import '../features/pomodoro/presentation/pomodoro_screen.dart';
 import '../shared/navigation/bottom_nav.dart';
 
@@ -39,6 +42,17 @@ final routerProvider = Provider<GoRouter>((ref) {
           GoRoute(path: '/notes', builder: (_, _) => const NotesScreen()),
           GoRoute(path: '/pomodoro', builder: (_, _) => const PomodoroScreen()),
         ],
+      ),
+      GoRoute(
+        path: '/note-editor',
+        builder: (context, state) {
+          final note = state.extra as Note?;
+          return NoteEditorScreen(note: note);
+        },
+      ),
+      GoRoute(
+        path: '/profile',
+        builder: (_, _) => const ProfileScreen(),
       ),
     ],
   );

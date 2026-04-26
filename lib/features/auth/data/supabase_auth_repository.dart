@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import '../domain/auth_repository.dart';
 
@@ -23,5 +24,29 @@ class SupabaseAuthRepository implements AuthRepository {
   @override
   Future<void> signOut() async {
     await _client.auth.signOut();
+  }
+  
+  @override
+  Future<void> updateAvatar(String filePath) async {
+    final user = currentUser;
+    if (user == null) return;
+
+    final file = File(filePath);
+    final fileExt = filePath.split('.').last;
+    final fileName = '${user.id}_${DateTime.now().millisecondsSinceEpoch}.$fileExt';
+    final path = 'avatars/$fileName';
+
+    // Upload image to storage
+    await _client.storage.from('profiles').upload(path, file);
+    
+    // Get public URL
+    final imageUrl = _client.storage.from('profiles').getPublicUrl(path);
+
+    // Update user metadata
+    await _client.auth.updateUser(
+      UserAttributes(
+        data: {'avatar_url': imageUrl},
+      ),
+    );
   }
 }

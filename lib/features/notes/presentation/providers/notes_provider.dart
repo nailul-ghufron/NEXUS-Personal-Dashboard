@@ -9,7 +9,16 @@ class Notes extends _$Notes {
   @override
   FutureOr<List<Note>> build() async {
     ref.keepAlive();
-    return ref.watch(notesRepositoryProvider).getNotes();
+    final repo = ref.watch(notesRepositoryProvider);
+
+    Future.microtask(() async {
+      final freshData = await repo.fetchNotesFromNetwork();
+      if (state.value != freshData) {
+        state = AsyncData(freshData);
+      }
+    });
+
+    return repo.getNotes();
   }
 
   Future<void> addNote(Note note) async {

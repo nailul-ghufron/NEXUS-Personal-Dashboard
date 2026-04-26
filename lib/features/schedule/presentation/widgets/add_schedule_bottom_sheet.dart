@@ -10,7 +10,8 @@ import '../../domain/models/schedule_item.dart';
 import '../providers/schedule_provider.dart';
 
 class AddScheduleBottomSheet extends ConsumerStatefulWidget {
-  const AddScheduleBottomSheet({super.key});
+  final ScheduleItem? item;
+  const AddScheduleBottomSheet({super.key, this.item});
 
   @override
   ConsumerState<AddScheduleBottomSheet> createState() => _AddScheduleBottomSheetState();
@@ -23,6 +24,31 @@ class _AddScheduleBottomSheetState extends ConsumerState<AddScheduleBottomSheet>
   DateTime _endTime = DateTime.now().add(const Duration(hours: 1));
   String _type = 'campus';
   int _selectedDay = DateTime.now().weekday - 1; // 0=Mon, 6=Sun
+
+  @override
+  void initState() {
+    super.initState();
+    if (widget.item != null) {
+      _titleController.text = widget.item!.title;
+      _locationController.text = widget.item!.location ?? '';
+      _selectedDay = widget.item!.dayOfWeek;
+      _type = widget.item!.type;
+      
+      // Parse times
+      try {
+        final startParts = widget.item!.startTime.split(':');
+        final now = DateTime.now();
+        _startTime = DateTime(now.year, now.month, now.day, int.parse(startParts[0]), int.parse(startParts[1]));
+        
+        if (widget.item!.endTime != null) {
+          final endParts = widget.item!.endTime!.split(':');
+          _endTime = DateTime(now.year, now.month, now.day, int.parse(endParts[0]), int.parse(endParts[1]));
+        }
+      } catch (e) {
+        debugPrint('Error parsing time: $e');
+      }
+    }
+  }
 
   @override
   void dispose() {
@@ -59,18 +85,29 @@ class _AddScheduleBottomSheetState extends ConsumerState<AddScheduleBottomSheet>
     final user = ref.read(currentUserProvider);
     if (user == null) return;
 
-    final newItem = ScheduleItem(
-      id: const Uuid().v4(),
-      userId: user.id,
-      title: _titleController.text.trim(),
-      dayOfWeek: _selectedDay,
-      startTime: DateFormat('HH:mm').format(_startTime),
-      endTime: DateFormat('HH:mm').format(_endTime),
-      type: _type,
-      location: _locationController.text.trim().isEmpty ? null : _locationController.text.trim(),
-    );
-
-    ref.read(scheduleProvider.notifier).addSchedule(newItem);
+    if (widget.item != null) {
+      final updatedItem = widget.item!.copyWith(
+        title: _titleController.text.trim(),
+        dayOfWeek: _selectedDay,
+        startTime: DateFormat('HH:mm').format(_startTime),
+        endTime: DateFormat('HH:mm').format(_endTime),
+        type: _type,
+        location: _locationController.text.trim().isEmpty ? null : _locationController.text.trim(),
+      );
+      ref.read(scheduleProvider.notifier).updateSchedule(updatedItem);
+    } else {
+      final newItem = ScheduleItem(
+        id: const Uuid().v4(),
+        userId: user.id,
+        title: _titleController.text.trim(),
+        dayOfWeek: _selectedDay,
+        startTime: DateFormat('HH:mm').format(_startTime),
+        endTime: DateFormat('HH:mm').format(_endTime),
+        type: _type,
+        location: _locationController.text.trim().isEmpty ? null : _locationController.text.trim(),
+      );
+      ref.read(scheduleProvider.notifier).addSchedule(newItem);
+    }
     Navigator.pop(context);
   }
 
@@ -204,7 +241,7 @@ class _AddScheduleBottomSheetState extends ConsumerState<AddScheduleBottomSheet>
               shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
             ),
             child: Text(
-              'Add to Schedule',
+              widget.item != null ? 'Update Schedule' : 'Add to Schedule',
               style: GoogleFonts.inter(fontWeight: FontWeight.w700),
             ),
           ),
