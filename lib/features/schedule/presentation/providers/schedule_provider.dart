@@ -22,7 +22,10 @@ class Schedule extends _$Schedule {
   }
 
   Future<void> addSchedule(ScheduleItem item) async {
-    state = const AsyncLoading();
+    final previousState = state;
+    if (previousState.hasValue) {
+      state = AsyncData([...previousState.value!, item]);
+    }
     state = await AsyncValue.guard(() async {
       await ref.read(scheduleRepositoryProvider).createSchedule(item);
       return ref.read(scheduleRepositoryProvider).getSchedules();
@@ -30,7 +33,10 @@ class Schedule extends _$Schedule {
   }
 
   Future<void> updateSchedule(ScheduleItem item) async {
-    state = const AsyncLoading();
+    final previousState = state;
+    if (previousState.hasValue) {
+      state = AsyncData(previousState.value!.map((i) => i.id == item.id ? item : i).toList());
+    }
     state = await AsyncValue.guard(() async {
       await ref.read(scheduleRepositoryProvider).updateSchedule(item);
       return ref.read(scheduleRepositoryProvider).getSchedules();
@@ -38,7 +44,10 @@ class Schedule extends _$Schedule {
   }
 
   Future<void> removeSchedule(String id) async {
-    state = const AsyncLoading();
+    final previousState = state;
+    if (previousState.hasValue) {
+      state = AsyncData(previousState.value!.where((i) => i.id != id).toList());
+    }
     state = await AsyncValue.guard(() async {
       await ref.read(scheduleRepositoryProvider).deleteSchedule(id);
       return ref.read(scheduleRepositoryProvider).getSchedules();

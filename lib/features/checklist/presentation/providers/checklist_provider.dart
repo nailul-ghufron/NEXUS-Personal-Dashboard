@@ -57,7 +57,10 @@ class Checklist extends _$Checklist {
   }
 
   Future<void> addItem(ChecklistItem item) async {
-    state = const AsyncLoading();
+    final previousState = state;
+    if (previousState.hasValue) {
+      state = AsyncData([...previousState.value!, item]);
+    }
     state = await AsyncValue.guard(() async {
       await ref.read(checklistRepositoryProvider).createChecklist(item);
       return ref.read(checklistRepositoryProvider).getChecklists();
@@ -65,7 +68,10 @@ class Checklist extends _$Checklist {
   }
 
   Future<void> removeItem(String id) async {
-    state = const AsyncLoading();
+    final previousState = state;
+    if (previousState.hasValue) {
+      state = AsyncData(previousState.value!.where((i) => i.id != id).toList());
+    }
     state = await AsyncValue.guard(() async {
       await ref.read(checklistRepositoryProvider).deleteChecklist(id);
       return ref.read(checklistRepositoryProvider).getChecklists();

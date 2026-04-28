@@ -9,6 +9,8 @@ class GlassCard extends StatelessWidget {
   final double? width;
   final double? height;
 
+  final bool useBlur;
+
   const GlassCard({
     super.key,
     required this.child,
@@ -16,32 +18,74 @@ class GlassCard extends StatelessWidget {
     this.borderRadius = 24,
     this.width,
     this.height,
+    this.useBlur = true,
   });
 
   @override
   Widget build(BuildContext context) {
-    return RepaintBoundary(
+    if (!useBlur) {
+      return Container(
+        width: width,
+        height: height,
+        padding: padding,
+        decoration: BoxDecoration(
+          color: NexusColors.surfaceGlass,
+          borderRadius: BorderRadius.circular(borderRadius),
+          border: Border.all(
+            color: NexusColors.glassBorder,
+            width: 1,
+          ),
+        ),
+        child: child,
+      );
+    }
+
+    return Container(
+      width: width,
+      height: height,
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(borderRadius),
+      ),
       child: ClipRRect(
         borderRadius: BorderRadius.circular(borderRadius),
-        child: BackdropFilter(
-          filter: ImageFilter.blur(
-            sigmaX: NexusColors.glassBlur,
-            sigmaY: NexusColors.glassBlur,
-          ),
-          child: Container(
-            width: width,
-            height: height,
-            padding: padding,
-            decoration: BoxDecoration(
-              color: NexusColors.surfaceGlass,
-              borderRadius: BorderRadius.circular(borderRadius),
-              border: Border.all(
-                color: NexusColors.glassBorder,
-                width: 1,
+        child: Stack(
+          children: [
+            // Background Blur Layer
+            Positioned.fill(
+              child: RepaintBoundary(
+                child: BackdropFilter(
+                  filter: ImageFilter.blur(
+                    sigmaX: NexusColors.glassBlur,
+                    sigmaY: NexusColors.glassBlur,
+                  ),
+                  child: Container(
+                    color: NexusColors.surfaceGlass,
+                  ),
+                ),
               ),
             ),
-            child: child,
-          ),
+            // Border Layer
+            Positioned.fill(
+              child: IgnorePointer(
+                child: Container(
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(borderRadius),
+                    border: Border.all(
+                      color: NexusColors.glassBorder,
+                      width: 1,
+                    ),
+                  ),
+                ),
+              ),
+            ),
+            // Content Layer
+            Padding(
+              padding: padding ?? EdgeInsets.zero,
+              child: RepaintBoundary(
+                child: child,
+              ),
+            ),
+          ],
         ),
       ),
     );

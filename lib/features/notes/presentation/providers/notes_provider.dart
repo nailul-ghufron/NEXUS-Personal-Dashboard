@@ -22,7 +22,10 @@ class Notes extends _$Notes {
   }
 
   Future<void> addNote(Note note) async {
-    state = const AsyncLoading();
+    final previousState = state;
+    if (previousState.hasValue) {
+      state = AsyncData([...previousState.value!, note]);
+    }
     state = await AsyncValue.guard(() async {
       await ref.read(notesRepositoryProvider).createNote(note);
       return ref.read(notesRepositoryProvider).getNotes();
@@ -31,7 +34,10 @@ class Notes extends _$Notes {
 
   Future<void> updateNote(Note note) async {
     final updatedNote = note.copyWith(lastModified: DateTime.now());
-    state = const AsyncLoading();
+    final previousState = state;
+    if (previousState.hasValue) {
+      state = AsyncData(previousState.value!.map((n) => n.id == note.id ? updatedNote : n).toList());
+    }
     state = await AsyncValue.guard(() async {
       await ref.read(notesRepositoryProvider).updateNote(updatedNote);
       return ref.read(notesRepositoryProvider).getNotes();
@@ -39,7 +45,10 @@ class Notes extends _$Notes {
   }
 
   Future<void> removeNote(String id) async {
-    state = const AsyncLoading();
+    final previousState = state;
+    if (previousState.hasValue) {
+      state = AsyncData(previousState.value!.where((n) => n.id != id).toList());
+    }
     state = await AsyncValue.guard(() async {
       await ref.read(notesRepositoryProvider).deleteNote(id);
       return ref.read(notesRepositoryProvider).getNotes();

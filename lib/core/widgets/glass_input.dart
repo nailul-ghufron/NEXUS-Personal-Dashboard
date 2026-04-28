@@ -12,6 +12,7 @@ class GlassInput extends StatelessWidget {
   final TextInputType keyboardType;
   final ValueChanged<String>? onChanged;
   final bool autoFocus;
+  final bool useBlur;
   final int? maxLines;
 
   const GlassInput({
@@ -25,11 +26,13 @@ class GlassInput extends StatelessWidget {
     this.onChanged,
     this.autoFocus = false,
     this.maxLines = 1,
+    this.useBlur = false,
   });
 
   @override
   Widget build(BuildContext context) {
     return GlassCard(
+      useBlur: useBlur,
       padding: const EdgeInsets.symmetric(horizontal: 16),
       borderRadius: 16,
       height: maxLines == 1 ? 56 : null,
