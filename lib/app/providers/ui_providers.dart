@@ -57,8 +57,19 @@ final checklistSelectedDateProvider = NotifierProvider<ChecklistSelectedDateNoti
   return ChecklistSelectedDateNotifier();
 });
 
-final realtimeDateProvider = StreamProvider<DateTime>((ref) {
-  return Stream.periodic(const Duration(minutes: 1), (_) => DateTime.now())
-      .map((date) => date)
-      .distinct((prev, next) => prev.day == next.day && prev.month == next.month && prev.year == next.year);
+class ScheduleSelectedDateNotifier extends Notifier<DateTime> {
+  @override
+  DateTime build() => DateTime.now();
+  void setDate(DateTime date) => state = date;
+  void nextDay() => state = state.add(const Duration(days: 1));
+  void previousDay() => state = state.subtract(const Duration(days: 1));
+}
+
+final scheduleSelectedDateProvider = NotifierProvider<ScheduleSelectedDateNotifier, DateTime>(() {
+  return ScheduleSelectedDateNotifier();
+});
+
+final realtimeDateProvider = StreamProvider<DateTime>((ref) async* {
+  yield DateTime.now();
+  yield* Stream.periodic(const Duration(seconds: 10), (_) => DateTime.now());
 });

@@ -1,4 +1,6 @@
 import 'package:riverpod_annotation/riverpod_annotation.dart';
+import 'package:hive/hive.dart';
+import 'package:intl/intl.dart';
 import '../../../../shared/providers/repository_providers.dart';
 import '../../domain/models/checklist_item.dart';
 
@@ -10,6 +12,22 @@ class Checklist extends _$Checklist {
   FutureOr<List<ChecklistItem>> build() async {
     ref.keepAlive();
     final repo = ref.watch(checklistRepositoryProvider);
+    
+    // Reset daily tasks on app launch if the day has changed
+    Future.microtask(() async {
+      try {
+        final cacheBox = Hive.box('cache');
+        final String? lastResetStr = cacheBox.get('last_checklist_reset');
+        final todayStr = DateFormat('yyyy-MM-dd').format(DateTime.now());
+        
+        if (lastResetStr != todayStr) {
+          await resetDailyTasks();
+          await cacheBox.put('last_checklist_reset', todayStr);
+        }
+      } catch (e) {
+        // Ignore issues if box isn't ready
+      }
+    });
     
     // Fire and forget background network refresh
     Future.microtask(() async {

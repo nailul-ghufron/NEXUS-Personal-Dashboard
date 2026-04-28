@@ -82,7 +82,7 @@ class ChecklistScreen extends ConsumerWidget {
                       final totalCount = filteredItems.length;
 
                       return Padding(
-                        padding: const EdgeInsets.fromLTRB(20, 24, 20, 100),
+                        padding: const EdgeInsets.fromLTRB(20, 24, 20, 0),
                         child: CustomScrollView(
                           slivers: [
                             SliverToBoxAdapter(
@@ -98,6 +98,7 @@ class ChecklistScreen extends ConsumerWidget {
                               ),
                             ),
                             _buildChecklist(ref, filteredItems),
+                            const SliverToBoxAdapter(child: SizedBox(height: 150)),
                           ],
                         ),
                       );

@@ -33,7 +33,7 @@ final class ChecklistProvider
   Checklist create() => Checklist();
 }
 
-String _$checklistHash() => r'9f05a27bee77c96f012dd5f7d1f16d9306c3f9f8';
+String _$checklistHash() => r'c171187528a0d2a1324806b7eb8143e18b0a77c6';
 
 abstract class _$Checklist extends $AsyncNotifier<List<ChecklistItem>> {
   FutureOr<List<ChecklistItem>> build();

@@ -65,6 +65,7 @@ class PomodoroNotifier extends Notifier<PomodoroState> {
   @override
   PomodoroState build() {
     _audioPlayer = AudioPlayer();
+    _audioPlayer.audioCache = AudioCache(prefix: '');
     ref.onDispose(() {
       _timer?.cancel();
       _audioPlayer.dispose();

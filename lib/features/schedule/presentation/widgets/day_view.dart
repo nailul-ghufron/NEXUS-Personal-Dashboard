@@ -19,7 +19,7 @@ class DayView extends ConsumerWidget {
 
     return CustomScrollView(
       slivers: [
-        if (currentFilter == 0) SliverToBoxAdapter(child: _buildDateSelector()),
+        if (currentFilter == 0) SliverToBoxAdapter(child: _buildDateSelector(ref)),
         if (currentFilter == 1) SliverToBoxAdapter(child: _buildWeeklyHeader()),
         if (currentFilter == 2) const SliverToBoxAdapter(child: CalendarView()),
         const SliverToBoxAdapter(child: SizedBox(height: 16)),
@@ -28,12 +28,10 @@ class DayView extends ConsumerWidget {
             List<ScheduleItem> filteredItems = items;
             
             if (currentFilter == 0) {
-              // Today's filter (0=Mon in DB, DateTime.now().weekday is 1=Mon)
-              final today = (DateTime.now().weekday - 1);
-              debugPrint('Today weekday index (DB format): $today');
-              debugPrint('Expected schedules count: ${items.where((i) => i.dayOfWeek == today).length}');
+              final selectedDate = ref.watch(scheduleSelectedDateProvider);
+              final today = (selectedDate.weekday - 1);
+              debugPrint('Selected weekday index (DB format): $today');
               filteredItems = items.where((item) => item.dayOfWeek == today).toList();
-              // Sort by start time
               filteredItems.sort((a, b) => a.startTime.compareTo(b.startTime));
             } else if (currentFilter == 1) {
               // Weekly filter: sort by day then by time
@@ -111,18 +109,28 @@ class DayView extends ConsumerWidget {
             ),
           ),
         ),
+        const SliverToBoxAdapter(child: SizedBox(height: 150)),
       ],
     );
   }
 
-  Widget _buildDateSelector() {
+  Widget _buildDateSelector(WidgetRef ref) {
+    final selectedDate = ref.watch(scheduleSelectedDateProvider);
     final now = DateTime.now();
-    final formattedDate = DateFormat('EEEE, d MMM', 'id_ID').format(now);
+    final isToday = selectedDate.day == now.day &&
+                    selectedDate.month == now.month &&
+                    selectedDate.year == now.year;
+                    
+    final formattedDate = isToday
+        ? 'Hari Ini, ${DateFormat('d MMM', 'id_ID').format(selectedDate)}'
+        : DateFormat('EEEE, d MMM', 'id_ID').format(selectedDate);
     
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        _iconButton(Icons.chevron_left),
+        _iconButton(Icons.chevron_left, () {
+          ref.read(scheduleSelectedDateProvider.notifier).previousDay();
+        }),
         Row(
           children: [
             const Icon(
@@ -141,7 +149,9 @@ class DayView extends ConsumerWidget {
             ),
           ],
         ),
-        _iconButton(Icons.chevron_right),
+        _iconButton(Icons.chevron_right, () {
+          ref.read(scheduleSelectedDateProvider.notifier).nextDay();
+        }),
       ],
     );
   }
@@ -181,16 +191,19 @@ class DayView extends ConsumerWidget {
     }
   }
 
-  Widget _iconButton(IconData icon) {
-    return Container(
-      width: 40,
-      height: 40,
-      decoration: BoxDecoration(
-        color: NexusColors.surfaceGlass,
-        shape: BoxShape.circle,
-        border: Border.all(color: NexusColors.glassBorder),
+  Widget _iconButton(IconData icon, [VoidCallback? onTap]) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        width: 40,
+        height: 40,
+        decoration: BoxDecoration(
+          color: NexusColors.surfaceGlass,
+          shape: BoxShape.circle,
+          border: Border.all(color: NexusColors.glassBorder),
+        ),
+        child: Icon(icon, color: NexusColors.textSecondary),
       ),
-      child: Icon(icon, color: NexusColors.textSecondary),
     );
   }
 

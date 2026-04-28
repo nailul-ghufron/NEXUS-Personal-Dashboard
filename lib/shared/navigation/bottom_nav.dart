@@ -101,28 +101,30 @@ class _MainShellState extends ConsumerState<MainShell> {
         ),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
-      bottomNavigationBar: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          const PomodoroWidget(),
-          Padding(
-            padding: const EdgeInsets.fromLTRB(24, 0, 24, 20),
-            child: GlassCard(
-              borderRadius: 32,
-              padding: const EdgeInsets.symmetric(vertical: 8),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  _buildNavItem(context, LucideIcons.house, '/today'),
-                  _buildNavItem(context, LucideIcons.calendar, '/schedule'),
-                  _buildNavItem(context, LucideIcons.timer, '/pomodoro'),
-                  _buildNavItem(context, LucideIcons.listTodo, '/checklist'),
-                  _buildNavItem(context, LucideIcons.stickyNote, '/notes'),
-                ],
+      bottomNavigationBar: SafeArea(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            const PomodoroWidget(),
+            Padding(
+              padding: const EdgeInsets.fromLTRB(24, 0, 24, 10),
+              child: GlassCard(
+                borderRadius: 32,
+                padding: const EdgeInsets.symmetric(vertical: 8),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    _buildNavItem(context, LucideIcons.house, '/today'),
+                    _buildNavItem(context, LucideIcons.calendar, '/schedule'),
+                    _buildNavItem(context, LucideIcons.timer, '/pomodoro'),
+                    _buildNavItem(context, LucideIcons.listTodo, '/checklist'),
+                    _buildNavItem(context, LucideIcons.stickyNote, '/notes'),
+                  ],
+                ),
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

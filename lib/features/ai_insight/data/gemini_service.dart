@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import '../../../core/database/local_db_service.dart';
 
 final geminiServiceProvider = Provider((ref) => GeminiService());
@@ -13,15 +14,15 @@ class GeminiService {
   final List<Map<String, String>> _pool = [
     {
       'provider': 'gemini',
-      'key': '', // Masukkan API Key Anda di sini atau gunakan .env
+      'key': dotenv.get('gemini_api', fallback: ''),
     },
     {
       'provider': 'openrouter',
-      'key': '', // Masukkan API Key Anda di sini atau gunakan .env
+      'key': dotenv.get('OpenRouter_Api', fallback: ''),
     },
     {
       'provider': 'grok',
-      'key': '', // Masukkan API Key Anda di sini atau gunakan .env
+      'key': dotenv.get('Grok_API', fallback: ''),
     }
   ];
 

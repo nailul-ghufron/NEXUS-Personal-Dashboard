@@ -115,7 +115,7 @@ class _AddScheduleBottomSheetState extends ConsumerState<AddScheduleBottomSheet>
   Widget build(BuildContext context) {
     return Container(
       padding: EdgeInsets.only(
-        bottom: MediaQuery.of(context).viewInsets.bottom + 24,
+        bottom: MediaQuery.of(context).viewInsets.bottom + MediaQuery.of(context).padding.bottom + 24,
         top: 24,
         left: 24,
         right: 24,
@@ -124,24 +124,25 @@ class _AddScheduleBottomSheetState extends ConsumerState<AddScheduleBottomSheet>
         color: NexusColors.background,
         borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
       ),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          Text(
-            'New Schedule',
-            style: GoogleFonts.inter(
-              fontSize: 20,
-              fontWeight: FontWeight.w700,
-              color: NexusColors.textPrimary,
+      child: SingleChildScrollView(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            Text(
+              widget.item != null ? 'Edit Schedule' : 'New Schedule',
+              style: GoogleFonts.inter(
+                fontSize: 20,
+                fontWeight: FontWeight.w700,
+                color: NexusColors.textPrimary,
+              ),
             ),
-          ),
-          const SizedBox(height: 16),
-          GlassInput(
-            controller: _titleController,
-            hintText: 'Activity Title',
-            autoFocus: true,
-          ),
+            const SizedBox(height: 16),
+            GlassInput(
+              controller: _titleController,
+              hintText: 'Activity Title',
+              autoFocus: true,
+            ),
           const SizedBox(height: 12),
           GlassInput(
             controller: _locationController,
@@ -247,7 +248,7 @@ class _AddScheduleBottomSheetState extends ConsumerState<AddScheduleBottomSheet>
           ),
         ],
       ),
-    );
+    ),);
   }
 
   Widget _buildTimePicker(String label, DateTime time, VoidCallback onTap) {

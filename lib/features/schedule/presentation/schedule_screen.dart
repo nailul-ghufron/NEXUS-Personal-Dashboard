@@ -47,7 +47,7 @@ class ScheduleScreen extends ConsumerWidget {
             const SizedBox(height: 16),
             const Expanded(
               child: Padding(
-                padding: EdgeInsets.fromLTRB(20, 0, 20, 100),
+                padding: EdgeInsets.fromLTRB(20, 0, 20, 0),
                 child: DayView(),
               ),
             ),

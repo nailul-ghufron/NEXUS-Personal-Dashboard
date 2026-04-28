@@ -47,7 +47,7 @@ class _AddChecklistBottomSheetState extends ConsumerState<AddChecklistBottomShee
   Widget build(BuildContext context) {
     return Container(
       padding: EdgeInsets.only(
-        bottom: MediaQuery.of(context).viewInsets.bottom + 24,
+        bottom: MediaQuery.of(context).viewInsets.bottom + MediaQuery.of(context).padding.bottom + 24,
         top: 24,
         left: 24,
         right: 24,
@@ -56,15 +56,16 @@ class _AddChecklistBottomSheetState extends ConsumerState<AddChecklistBottomShee
         color: NexusColors.background,
         borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
       ),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                'New Task',
+      child: SingleChildScrollView(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  'New Task',
                 style: GoogleFonts.inter(
                   fontSize: 20,
                   fontWeight: FontWeight.w700,
@@ -141,6 +142,6 @@ class _AddChecklistBottomSheetState extends ConsumerState<AddChecklistBottomShee
           ),
         ],
       ),
-    );
+    ),);
   }
 }
